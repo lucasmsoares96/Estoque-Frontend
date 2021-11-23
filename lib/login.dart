@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'user.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -11,14 +10,14 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  Future<User>? _futureUser;
+  // Future<User>? _futureUser;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       padding: const EdgeInsets.all(8.0),
-      child: (_futureUser == null) ? buildColumn() : buildFutureBuilder(),
+      child: buildColumn(),
     );
   }
 
@@ -68,31 +67,27 @@ class _LoginState extends State<Login> {
           onPressed: () {
             setState(
               () {
-                Map<String, dynamic> user = {
-                  "email": _emailController.text,
-                  "password": _passwordController.text,
-                };
-                _futureUser = login(user);
+                // TODO: provider
+                // precisamos do provider para acessar os dados do usuário
+                // logado em todo o sistema
+
+                // Map<String, dynamic> user = {
+                //   "email": _emailController.text,
+                //   "password": _passwordController.text,
+                // };
+                // _futureUser = login(user);
+
+                // TODO: CupertinoAlertDialog
+                // mostrar mensagem de erro quando o usuário informar a
+                // a senha errada
+
+                Navigator.of(context, rootNavigator: true).pushNamed('/home');
               },
             );
           },
           child: const Text('Login'),
         ),
       ],
-    );
-  }
-
-  FutureBuilder<User> buildFutureBuilder() {
-    return FutureBuilder<User>(
-      future: _futureUser,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.data!.name);
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return const CupertinoActivityIndicator();
-      },
     );
   }
 }

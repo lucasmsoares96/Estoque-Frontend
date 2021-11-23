@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
-
   @override
   _UserPageState createState() => _UserPageState();
 }
@@ -16,10 +15,9 @@ class _UserPageState extends State<UserPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           CupertinoButton(
-            child: Text('Home :)'),
-            onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName('/')),
-          ),
+              child: const Text('Página Inicial'),
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop(context)),
         ],
       ),
     );
