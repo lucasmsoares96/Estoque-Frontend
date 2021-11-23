@@ -1,5 +1,6 @@
-import 'package:estoque_frontend/tab_create.dart';
+import 'package:estoque_frontend/login.dart';
 import 'package:estoque_frontend/tab_fetch.dart';
+import 'package:estoque_frontend/user_page.dart';
 import 'package:flutter/cupertino.dart';
 
 void main() {
@@ -11,8 +12,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoApp(
-      home: Home(),
+    return CupertinoApp(
+      title: "Página de Login",
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Home(),
+        '/userPage': (context) => const UserPage(),
+      },
     );
   }
 }
@@ -27,11 +33,11 @@ class Home extends StatelessWidget {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.home),
-            label: 'Create',
+            label: 'home',
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search),
-            label: 'Fetch',
+            label: 'search',
           ),
         ],
       ),
@@ -41,7 +47,7 @@ class Home extends StatelessWidget {
           case 0:
             returnValue = CupertinoTabView(builder: (context) {
               return const CupertinoPageScaffold(
-                child: UserCreateTab(),
+                child: Login(),
               );
             });
             break;
