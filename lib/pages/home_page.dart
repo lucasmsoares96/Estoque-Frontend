@@ -1,9 +1,9 @@
-import 'package:estoque_frontend/tab_fetch.dart';
-import 'package:estoque_frontend/user_page.dart';
+import 'package:estoque_frontend/pages/tab_fetch.dart';
+import 'package:estoque_frontend/pages/user_page.dart';
 import 'package:flutter/cupertino.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

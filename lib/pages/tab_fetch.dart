@@ -1,6 +1,5 @@
+import 'package:estoque_frontend/models/user.dart';
 import 'package:flutter/cupertino.dart';
-
-import 'user.dart';
 
 class UserFetchTab extends StatefulWidget {
   const UserFetchTab({Key? key}) : super(key: key);
