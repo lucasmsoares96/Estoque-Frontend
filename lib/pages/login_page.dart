@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,17 +14,111 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool loading = false;
   // Future<User>? _futureUser;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(8.0),
-      child: buildColumn(),
+  inputDecoration() {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: CupertinoPageScaffold(
+        child: Stack(children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Colors.blue,
+                  Colors.red,
+                ],
+              ),
+            ),
+          ),
+          Center(
+            child: Form(
+              child: Container(
+                decoration: const BoxDecoration(color: Colors.white10),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: ListView(
+                  shrinkWrap: true,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: CupertinoTextField(
+                        decoration: inputDecoration(),
+                        suffix: const Icon(
+                          Icons.person_outlined,
+                          color: Colors.black,
+                        ),
+                        placeholder: "Login",
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailController,
+                        enabled: !loading,
+                        // decoration: const BoxDecoration(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: CupertinoTextField(
+                        decoration: inputDecoration(),
+                        suffix: const Icon(
+                          Icons.lock_outline,
+                          color: Colors.black,
+                        ),
+                        placeholder: "Senha",
+                        controller: _passwordController,
+                        enabled: !loading,
+                        obscureText: true,
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 5, right: 70, left: 70),
+                      child: CupertinoButton.filled(
+                          child: loading
+                              ? const CircularProgressIndicator()
+                              : const Text("Login"),
+                          onPressed: () {
+                            // Os validators devem ser escritos aqui
+                            // PQ? pq os widgets cupertino sao merdas
+                            setState(() {
+                              loading = !loading;
+                            });
+                            // sleep(Duration(milliseconds: 5));
+                            Future.delayed(Duration(milliseconds: 5));
+                            Navigator.of(context).pushNamed("/home");
+                          }),
+                    ),
+                    CupertinoButton(
+                        child: const Text(
+                          "Esqueci minha senha",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {})
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ]),
+      ),
+    );
+    // return Container(
+    //   alignment: Alignment.center,
+    //   padding: const EdgeInsets.all(8.0),
+    //   child: buildColumn(),
+    // );
+  }
+
+// OLD
   Column buildColumn() {
     return Column(
       children: <Widget>[
