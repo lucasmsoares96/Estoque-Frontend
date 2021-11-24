@@ -1,6 +1,5 @@
-import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:estoque_frontend/models/user.dart';
+import 'package:estoque_frontend/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool loading = false;
-  // Future<User>? _futureUser;
+  Future<User>? _futureUser;
   inputDecoration() {
     return BoxDecoration(
       color: Colors.white,
@@ -111,11 +110,6 @@ class _LoginPageState extends State<LoginPage> {
         ]),
       ),
     );
-    // return Container(
-    //   alignment: Alignment.center,
-    //   padding: const EdgeInsets.all(8.0),
-    //   child: buildColumn(),
-    // );
   }
 
 // OLD
@@ -168,23 +162,36 @@ class _LoginPageState extends State<LoginPage> {
                 // precisamos do provider para acessar os dados do usuário
                 // logado em todo o sistema
 
-                // Map<String, dynamic> user = {
-                //   "email": _emailController.text,
-                //   "password": _passwordController.text,
-                // };
-                // _futureUser = login(user);
+                Map<String, dynamic> user = {
+                  "email": _emailController.text,
+                  "password": _passwordController.text,
+                };
+                _futureUser = login(user);
 
                 // TODO: CupertinoAlertDialog
                 // mostrar mensagem de erro quando o usuário informar a
                 // a senha errada
-
-                Navigator.of(context, rootNavigator: true).pushNamed('/home');
               },
             );
           },
           child: const Text('Login'),
         ),
       ],
+    );
+  }
+
+  FutureBuilder<User> buildFutureBuilder() {
+    return FutureBuilder<User>(
+      future: _futureUser,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          // Navigator.of(context, rootNavigator: true).pushNamed('/home');
+          return Home(user: snapshot.data!);
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        return const CupertinoActivityIndicator();
+      },
     );
   }
 }

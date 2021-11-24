@@ -1,7 +1,9 @@
+import 'package:estoque_frontend/models/user.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserPage extends StatefulWidget {
-  const UserPage({Key? key}) : super(key: key);
+  const UserPage({required this.user, Key? key}) : super(key: key);
+  final User user;
   @override
   _UserPageState createState() => _UserPageState();
 }
@@ -15,7 +17,7 @@ class _UserPageState extends State<UserPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           CupertinoButton(
-              child: const Text('Página Inicial'),
+              child: Text(widget.user.name),
               onPressed: () =>
                   Navigator.of(context, rootNavigator: true).pop(context)),
         ],

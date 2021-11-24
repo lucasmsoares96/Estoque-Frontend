@@ -2,7 +2,6 @@ import 'package:estoque_frontend/models/user.dart';
 import 'package:estoque_frontend/pages/home_page.dart';
 import 'package:estoque_frontend/pages/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 // TODO: Retirar essa classe daqui,apenas modelagem
 class AuthService {
@@ -22,9 +21,9 @@ class AuthCheck extends StatelessWidget {
     if (auth.isLoading) {
       return loading();
     } else if (auth.user == null) {
-      return LoginPage();
+      return const LoginPage();
     } else {
-      return HomePage();
+      return Home(user: auth.user!);
     }
   }
 

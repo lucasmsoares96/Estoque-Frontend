@@ -1,9 +1,12 @@
+import 'package:estoque_frontend/models/user.dart';
 import 'package:estoque_frontend/pages/tab_fetch.dart';
 import 'package:estoque_frontend/pages/user_page.dart';
 import 'package:flutter/cupertino.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class Home extends StatelessWidget {
+  const Home({required this.user, Key? key}) : super(key: key);
+
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +28,8 @@ class HomePage extends StatelessWidget {
         switch (index) {
           case 0:
             returnValue = CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                child: UserPage(),
+              return CupertinoPageScaffold(
+                child: UserPage(user: user),
               );
             });
             break;
