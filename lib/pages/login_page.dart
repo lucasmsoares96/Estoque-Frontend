@@ -26,158 +26,93 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: CupertinoPageScaffold(
-        child: Stack(children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Colors.blue,
-                  Colors.red,
-                ],
-              ),
-            ),
-          ),
-          Center(
-            child: Form(
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.white10),
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: ListView(
-                  shrinkWrap: true,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: CupertinoTextField(
-                        decoration: inputDecoration(),
-                        suffix: const Icon(
-                          Icons.person_outlined,
-                          color: Colors.black,
-                        ),
-                        placeholder: "Login",
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _emailController,
-                        enabled: !loading,
-                        // decoration: const BoxDecoration(),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: CupertinoTextField(
-                        decoration: inputDecoration(),
-                        suffix: const Icon(
-                          Icons.lock_outline,
-                          color: Colors.black,
-                        ),
-                        placeholder: "Senha",
-                        controller: _passwordController,
-                        enabled: !loading,
-                        obscureText: true,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5, right: 70, left: 70),
-                      child: CupertinoButton.filled(
-                          child: loading
-                              ? const CircularProgressIndicator()
-                              : const Text("Login"),
-                          onPressed: () {
-                            // Os validators devem ser escritos aqui
-                            // PQ? pq os widgets cupertino sao merdas
-                            setState(() {
-                              loading = !loading;
-                            });
-                            // sleep(Duration(milliseconds: 5));
-                            Future.delayed(Duration(milliseconds: 5));
-                            Navigator.of(context).pushNamed("/home");
-                          }),
-                    ),
-                    CupertinoButton(
-                        child: const Text(
-                          "Esqueci minha senha",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {})
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ]),
+        child: (_futureUser == null) ? buildStack() : buildFutureBuilder(),
       ),
     );
   }
 
-// OLD
-  Column buildColumn() {
-    return Column(
-      children: <Widget>[
-        const Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 20),
-            child: Text(
-              "Login",
-              style: TextStyle(fontSize: 30),
+  Stack buildStack() {
+    return Stack(children: [
+      Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Colors.blue,
+              Colors.red,
+            ],
+          ),
+        ),
+      ),
+      Center(
+        child: Form(
+          child: Container(
+            decoration: const BoxDecoration(color: Colors.white10),
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: CupertinoTextField(
+                    decoration: inputDecoration(),
+                    suffix: const Icon(
+                      Icons.person_outlined,
+                      color: Colors.black,
+                    ),
+                    placeholder: "Login",
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
+                    enabled: !loading,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: CupertinoTextField(
+                    decoration: inputDecoration(),
+                    suffix: const Icon(
+                      Icons.lock_outline,
+                      color: Colors.black,
+                    ),
+                    placeholder: "Senha",
+                    controller: _passwordController,
+                    enabled: !loading,
+                    obscureText: true,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5, right: 70, left: 70),
+                  child: CupertinoButton.filled(
+                      child: loading
+                          ? const CircularProgressIndicator()
+                          : const Text("Login"),
+                      onPressed: () {
+                        setState(() {
+                          loading = !loading;
+                          Map<String, dynamic> user = {
+                            "email": _emailController.text,
+                            "password": _passwordController.text,
+                          };
+                          _futureUser = login(user);
+                          // TODO: Salvar usuário no Provider
+                        });
+                        Future.delayed(const Duration(milliseconds: 5));
+                      }),
+                ),
+                CupertinoButton(
+                    child: const Text(
+                      "Esqueci minha senha",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {})
+              ],
             ),
           ),
         ),
-        const Text(
-          "Email: ",
-          textAlign: TextAlign.start,
-          style: TextStyle(fontSize: 10),
-        ),
-        const SizedBox(height: 5),
-        CupertinoTextField(
-          prefix: const Icon(
-            CupertinoIcons.person,
-            color: CupertinoColors.lightBackgroundGray,
-            size: 16,
-          ),
-          placeholder: "Usuário",
-          controller: _emailController,
-        ),
-        const SizedBox(height: 5),
-        const Text(
-          "Senha: ",
-          style: TextStyle(fontSize: 10),
-        ),
-        CupertinoTextField(
-          prefix: const Icon(
-            CupertinoIcons.mail,
-            color: CupertinoColors.lightBackgroundGray,
-            size: 16,
-          ),
-          placeholder: "Senha",
-          controller: _passwordController,
-        ),
-        CupertinoButton(
-          onPressed: () {
-            setState(
-              () {
-                // TODO: provider
-                // precisamos do provider para acessar os dados do usuário
-                // logado em todo o sistema
-
-                Map<String, dynamic> user = {
-                  "email": _emailController.text,
-                  "password": _passwordController.text,
-                };
-                _futureUser = login(user);
-
-                // TODO: CupertinoAlertDialog
-                // mostrar mensagem de erro quando o usuário informar a
-                // a senha errada
-              },
-            );
-          },
-          child: const Text('Login'),
-        ),
-      ],
-    );
+      ),
+    ]);
   }
 
   FutureBuilder<User> buildFutureBuilder() {
@@ -185,7 +120,6 @@ class _LoginPageState extends State<LoginPage> {
       future: _futureUser,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          // Navigator.of(context, rootNavigator: true).pushNamed('/home');
           return Home(user: snapshot.data!);
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');

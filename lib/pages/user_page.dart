@@ -18,8 +18,8 @@ class _UserPageState extends State<UserPage> {
         children: [
           CupertinoButton(
               child: Text(widget.user.name),
-              onPressed: () =>
-                  Navigator.of(context, rootNavigator: true).pop(context)),
+              onPressed: () => Navigator.of(context, rootNavigator: true)
+                  .popUntil(ModalRoute.withName('/login'))),
         ],
       ),
     );

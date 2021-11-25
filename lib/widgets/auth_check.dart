@@ -15,8 +15,6 @@ class AuthCheck extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthService auth = AuthService(); // TODO: PROVIDER CHECK
-    // auth.isLoading = true;
-    // auth.user = User(email: 'a', name: "a");
 
     if (auth.isLoading) {
       return loading();

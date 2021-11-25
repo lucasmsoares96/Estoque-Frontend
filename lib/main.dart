@@ -1,4 +1,4 @@
-import 'package:estoque_frontend/pages/login.dart';
+import 'package:estoque_frontend/pages/login_page.dart';
 import 'package:estoque_frontend/widgets/auth_check.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -15,11 +15,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
       debugShowCheckedModeBanner: false,
-      // initialRoute: '/login',
-      // home: const Login(),
       home: const AuthCheck(),
       routes: {
-        '/login': (context) => const Login(),
+        '/login': (context) => const LoginPage(),
       },
     );
   }
