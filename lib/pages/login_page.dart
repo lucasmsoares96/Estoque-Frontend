@@ -98,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                           _futureUser = login(user);
                           // TODO: Salvar usuário no Provider
                         });
-                        Future.delayed(const Duration(milliseconds: 5));
+                        // Future.delayed(const Duration(milliseconds: 5));
                       }),
                 ),
                 CupertinoButton(
