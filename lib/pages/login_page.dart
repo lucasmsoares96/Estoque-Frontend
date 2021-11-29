@@ -2,6 +2,7 @@ import 'package:estoque_frontend/models/user.dart';
 import 'package:estoque_frontend/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool loading = false;
-  Future<User>? _futureUser;
+  Future<int>? _statusCode;
   inputDecoration() {
     return BoxDecoration(
       color: Colors.white,
@@ -26,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: CupertinoPageScaffold(
-        child: (_futureUser == null) ? buildStack() : buildFutureBuilder(),
+        child: (_statusCode == null) ? buildStack() : buildFutureBuilder(),
       ),
     );
   }
@@ -47,7 +48,9 @@ class _LoginPageState extends State<LoginPage> {
       ),
       Center(
         child: Form(
+          // TODO: validar formulário
           child: Container(
+            width: 500,
             decoration: const BoxDecoration(color: Colors.white10),
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child: ListView(
@@ -59,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: CupertinoTextField(
                     decoration: inputDecoration(),
                     suffix: const Icon(
-                      Icons.person_outlined,
+                      CupertinoIcons.person,
                       color: Colors.black,
                     ),
                     placeholder: "Login",
@@ -73,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: CupertinoTextField(
                     decoration: inputDecoration(),
                     suffix: const Icon(
-                      Icons.lock_outline,
+                      CupertinoIcons.lock,
                       color: Colors.black,
                     ),
                     placeholder: "Senha",
@@ -95,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                             "email": _emailController.text,
                             "password": _passwordController.text,
                           };
-                          _futureUser = login(user);
+                          _statusCode = context.read<User>().login(user);
                           // TODO: Salvar usuário no Provider
                         });
                         // Future.delayed(const Duration(milliseconds: 5));
@@ -115,12 +118,13 @@ class _LoginPageState extends State<LoginPage> {
     ]);
   }
 
-  FutureBuilder<User> buildFutureBuilder() {
-    return FutureBuilder<User>(
-      future: _futureUser,
+  FutureBuilder<int> buildFutureBuilder() {
+    return FutureBuilder<int>(
+      future: _statusCode,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Home(user: snapshot.data!);
+          // TODO: if _statuscode != 200 return mensagem de erro
+          return const Home();
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }

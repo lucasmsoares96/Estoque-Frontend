@@ -1,5 +1,6 @@
 import 'package:estoque_frontend/models/user.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class UserFetchTab extends StatefulWidget {
   const UserFetchTab({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _UserFetchTabState extends State<UserFetchTab> {
         CupertinoButton(
           onPressed: () {
             setState(() {
-              _futureUser = fetchUser(_controller.text);
+              _futureUser = context.read<User>().fetchUser(_controller.text);
             });
           },
           child: const Text('Fetch Data'),

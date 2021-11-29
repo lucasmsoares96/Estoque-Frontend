@@ -21,7 +21,7 @@ class AuthCheck extends StatelessWidget {
     } else if (auth.user == null) {
       return const LoginPage();
     } else {
-      return Home(user: auth.user!);
+      return const Home();
     }
   }
 
