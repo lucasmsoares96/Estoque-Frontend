@@ -1,11 +1,17 @@
 import 'package:estoque_frontend/models/user.dart';
 import 'package:estoque_frontend/pages/login_page.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:estoque_frontend/widgets/auth_check.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const App());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => AuthService()),
+    ],
+    child: App(),
+  ));
 }
 
 class App extends StatelessWidget {

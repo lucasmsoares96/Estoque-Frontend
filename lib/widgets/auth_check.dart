@@ -1,21 +1,16 @@
-import 'package:estoque_frontend/models/user.dart';
 import 'package:estoque_frontend/pages/home_page.dart';
 import 'package:estoque_frontend/pages/login_page.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
-
-// TODO: Retirar essa classe daqui,apenas modelagem
-class AuthService {
-  bool isLoading = false;
-  User? user;
-}
+import 'package:provider/provider.dart';
 
 class AuthCheck extends StatelessWidget {
   const AuthCheck({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    AuthService auth = AuthService(); // TODO: PROVIDER CHECK
-
+    // TODO: PROVIDER CHECK
+    final auth = Provider.of<AuthService>(context);
     if (auth.isLoading) {
       return loading();
     } else if (auth.user == null) {
