@@ -1,4 +1,4 @@
-import 'package:estoque_frontend/models/user.dart';
+import 'package:estoque_frontend/models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 

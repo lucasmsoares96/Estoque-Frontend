@@ -1,8 +1,9 @@
-import 'package:estoque_frontend/models/user.dart';
+import 'package:estoque_frontend/models/user_model.dart';
 import 'package:estoque_frontend/pages/home_page.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/src/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -94,11 +95,9 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         setState(() {
                           loading = !loading;
-                          Map<String, dynamic> user = {
-                            "email": _emailController.text,
-                            "password": _passwordController.text,
-                          };
-                          _statusCode = context.read<User>().login(user);
+                          context.read<AuthService>().login(
+                              email: _emailController.text,
+                              senha: _passwordController.text);
                           // TODO: Salvar usuário no Provider
                         });
                         // Future.delayed(const Duration(milliseconds: 5));

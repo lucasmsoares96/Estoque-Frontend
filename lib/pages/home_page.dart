@@ -1,3 +1,4 @@
+import 'package:estoque_frontend/models/user_model.dart';
 import 'package:estoque_frontend/pages/tab_fetch.dart';
 import 'package:estoque_frontend/pages/user_page.dart';
 import 'package:flutter/cupertino.dart';
