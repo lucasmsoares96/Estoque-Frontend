@@ -8,32 +8,30 @@ import 'package:http/http.dart' as http;
 class AuthService extends ChangeNotifier {
   late SharedPreferences _prefs;
   User? user;
-  bool isLoading = false;
+  bool isLoading = true;
 
   AuthService() {
     _startLogin();
   }
   _startLogin() async {
-    await _getSharedInstance();
+    await _startPreferences();
     await _checkLogin();
   }
 
-  _getSharedInstance() async {
+  _startPreferences() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
   // TODO: Substituir essa implementacao por token JWT
+  // PORQUE ESSA MERDA N FUNCIONAAAAAAAA
   _checkLogin() async {
-    isLoading = true;
-    String? nome = _prefs.getString("nome");
-    String? email = _prefs.getString("email");
-    // print(nome == null);
-    // print(email == null);
+    final nome = _prefs.getString('nome');
+    final email = _prefs.getString('email');
     if (nome != null && email != null) {
       user = User(name: nome, email: email);
-      notifyListeners();
-      isLoading = false;
     }
+    isLoading = false;
+    notifyListeners();
   }
 
   _setLoginCache(User user) async {
@@ -42,7 +40,7 @@ class AuthService extends ChangeNotifier {
   }
 
   login({required String email, required String senha}) async {
-    Map<String, String> credentials = {"email": email, "senha": senha};
+    Map<String, String> credentials = {"email": email, "password": senha};
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8080/login'),
       headers: <String, String>{
@@ -54,6 +52,7 @@ class AuthService extends ChangeNotifier {
       User u = User.fromJson(jsonDecode(response.body));
       _setLoginCache(u);
       user = u;
+      isLoading = false;
       notifyListeners();
       // return response.statusCode;
     } else {
