@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Future<int>? _statusCode;
+  Future<int?>? _statusCode;
   bool loading = false;
   inputDecoration(String hint, IconData icon) {
     return InputDecoration(
@@ -76,12 +76,12 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.only(top: 10),
                   child: TextFormField(
                     cursorColor: Colors.white,
-                    decoration: inputDecoration("Login", Icons.person_outlined),
+                    decoration: inputDecoration("Email", Icons.person_outlined),
                     controller: _emailController,
                     enabled: !loading,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Digite seu login.";
+                        return "Digite seu email.";
                       }
                       return null;
                     },
@@ -116,7 +116,6 @@ class _LoginPageState extends State<LoginPage> {
                               senha: _passwordController.text);
                         });
                       }
-                      // Future.delayed(const Duration(milliseconds: 5));
                     }),
               ),
               CupertinoButton(
@@ -139,8 +138,8 @@ class _LoginPageState extends State<LoginPage> {
             return AlertDialog(
               title: const Text('Falha ao logar'),
               content: const Text('Usuário e/ou senha inválidos'),
-              actions: <CupertinoDialogAction>[
-                CupertinoDialogAction(
+              actions: <Widget>[
+                TextButton(
                   child: const Text('OK'),
                   onPressed: () {
                     setState(

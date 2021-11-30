@@ -20,8 +20,11 @@ class _UserPageState extends State<UserPage> {
         children: [
           CupertinoButton(
             child: Text(user!.name),
-            onPressed: () => Navigator.of(context, rootNavigator: true)
-                .pushReplacementNamed('/login'),
+            onPressed: () {
+              context.read<AuthService>().logout();
+              Navigator.of(context, rootNavigator: true)
+                  .pushReplacementNamed('/login');
+            },
           ),
         ],
       ),

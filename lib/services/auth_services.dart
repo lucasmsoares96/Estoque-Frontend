@@ -13,6 +13,7 @@ class AuthService extends ChangeNotifier {
   AuthService() {
     _startLogin();
   }
+
   _startLogin() async {
     await _startPreferences();
     await _checkLogin();
@@ -55,7 +56,7 @@ class AuthService extends ChangeNotifier {
       notifyListeners();
       return response.statusCode;
     } else {
-      throw Exception('Erro ao fazer login');
+      return response.statusCode;
     }
   }
 

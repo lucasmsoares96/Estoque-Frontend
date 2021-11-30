@@ -9,7 +9,7 @@ class AuthCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.read<AuthService>();
+    final auth = context.watch<AuthService>();
     if (auth.isLoading) {
       return loading();
     } else if (auth.user == null) {

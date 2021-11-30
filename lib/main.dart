@@ -18,16 +18,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => User(),
-      child: MaterialApp(
-        theme: ThemeData.dark(),
-        debugShowCheckedModeBanner: false,
-        home: const AuthCheck(),
-        routes: {
-          '/login': (context) => const LoginPage(),
-        },
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const AuthCheck(),
+      routes: {
+        '/login': (context) => const LoginPage(),
+      },
     );
   }
 }
