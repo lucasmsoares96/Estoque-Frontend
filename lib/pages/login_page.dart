@@ -66,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
     return Form(
       key: _formKey,
       child: Container(
+          width: 500,
           decoration: const BoxDecoration(color: Colors.white10),
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: ListView(
