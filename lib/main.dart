@@ -1,7 +1,7 @@
 import 'package:estoque_frontend/pages/login_page.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:estoque_frontend/widgets/auth_check.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,12 +18,16 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      debugShowCheckedModeBanner: false,
-      home: const AuthCheck(),
-      routes: {
-        '/login': (context) => const LoginPage(),
-      },
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => User(),
+      child: MaterialApp(
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: false,
+        home: const AuthCheck(),
+        routes: {
+          '/login': (context) => const LoginPage(),
+        },
+      ),
     );
   }
 }

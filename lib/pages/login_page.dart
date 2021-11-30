@@ -14,104 +14,120 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  Future<int>? _statusCode;
   bool loading = false;
-  Future<int?>? _statusCode;
-  inputDecoration() {
-    return BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
+  inputDecoration(String hint, IconData icon) {
+    return InputDecoration(
+      icon: Icon(
+        icon,
+        color: Colors.white,
+      ),
+      focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      border: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderSide: BorderSide(color: Colors.white)),
+      hintText: hint,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: CupertinoPageScaffold(
-        child: (_statusCode == null) ? buildStack() : buildFutureBuilder(),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Colors.blue,
+                    Colors.red,
+                  ],
+                ),
+              ),
+            ),
+            Center(
+              child: (_statusCode == null)
+                  ? buildForm(context)
+                  : buildFutureBuilder(),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Stack buildStack() {
-    return Stack(children: [
-      Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Colors.blue,
-              Colors.red,
-            ],
-          ),
-        ),
-      ),
-      Center(
-        child: Form(
-          // TODO: validar formulário
-          child: Container(
-            width: 500,
-            decoration: const BoxDecoration(color: Colors.white10),
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: ListView(
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              children: [
-                Padding(
+  Form buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Container(
+          decoration: const BoxDecoration(color: Colors.white10),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: ListView(
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            children: [
+              Padding(
                   padding: const EdgeInsets.only(top: 10),
-                  child: CupertinoTextField(
-                    decoration: inputDecoration(),
-                    suffix: const Icon(
-                      CupertinoIcons.person,
-                      color: Colors.black,
-                    ),
-                    placeholder: "Login",
-                    keyboardType: TextInputType.emailAddress,
+                  child: TextFormField(
+                    cursorColor: Colors.white,
+                    decoration: inputDecoration("Login", Icons.person_outlined),
                     controller: _emailController,
                     enabled: !loading,
-                  ),
-                ),
-                Padding(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Digite seu login.";
+                      }
+                      return null;
+                    },
+                  )),
+              Padding(
                   padding: const EdgeInsets.only(top: 10),
-                  child: CupertinoTextField(
-                    decoration: inputDecoration(),
-                    suffix: const Icon(
-                      CupertinoIcons.lock,
-                      color: Colors.black,
-                    ),
-                    placeholder: "Senha",
+                  child: TextFormField(
+                    cursorColor: Colors.white,
+                    decoration: inputDecoration("Senha", Icons.lock_outlined),
                     controller: _passwordController,
                     enabled: !loading,
                     obscureText: true,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5, right: 70, left: 70),
-                  child: CupertinoButton.filled(
-                      child: loading
-                          ? const CircularProgressIndicator()
-                          : const Text("Login"),
-                      onPressed: () {
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Digite uma senha.';
+                      }
+                      return null;
+                    },
+                  )),
+              Padding(
+                padding: const EdgeInsets.only(top: 5, right: 70, left: 70),
+                child: ElevatedButton(
+                    child: loading
+                        ? const CircularProgressIndicator()
+                        : const Text("Login"),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
                         setState(() {
                           loading = true;
                           _statusCode = context.read<AuthService>().login(
                               email: _emailController.text,
                               senha: _passwordController.text);
                         });
-                      }),
-                ),
-                CupertinoButton(
-                    child: const Text(
-                      "Esqueci minha senha",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () {})
-              ],
-            ),
-          ),
-        ),
-      ),
-    ]);
+                      }
+                      // Future.delayed(const Duration(milliseconds: 5));
+                    }),
+              ),
+              CupertinoButton(
+                  child: const Text(
+                    "Esqueci minha senha",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () {})
+            ],
+          )),
+    );
   }
 
   FutureBuilder<int?> buildFutureBuilder() {
@@ -119,9 +135,27 @@ class _LoginPageState extends State<LoginPage> {
       future: _statusCode,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          loading = false;
-          // TODO: if _statuscode != 200 return mensagem de erro
-          return const Home();
+          if (snapshot.data != 200) {
+            return AlertDialog(
+              title: const Text('Falha ao logar'),
+              content: const Text('Usuário e/ou senha inválidos'),
+              actions: <CupertinoDialogAction>[
+                CupertinoDialogAction(
+                  child: const Text('OK'),
+                  onPressed: () {
+                    setState(
+                      () {
+                        _statusCode = null;
+                        loading = false;
+                      },
+                    );
+                  },
+                ),
+              ],
+            );
+          } else {
+            return const Home();
+          }
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
