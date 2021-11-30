@@ -1,9 +1,8 @@
-import 'package:estoque_frontend/models/user_model.dart';
 import 'package:estoque_frontend/pages/home_page.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool loading = false;
-  Future<int>? _statusCode;
+  Future<int?>? _statusCode;
   inputDecoration() {
     return BoxDecoration(
       color: Colors.white,
@@ -94,13 +93,11 @@ class _LoginPageState extends State<LoginPage> {
                           : const Text("Login"),
                       onPressed: () {
                         setState(() {
-                          loading = !loading;
-                          context.read<AuthService>().login(
+                          loading = true;
+                          _statusCode = context.read<AuthService>().login(
                               email: _emailController.text,
                               senha: _passwordController.text);
-                          // TODO: Salvar usuário no Provider
                         });
-                        // Future.delayed(const Duration(milliseconds: 5));
                       }),
                 ),
                 CupertinoButton(
@@ -117,11 +114,12 @@ class _LoginPageState extends State<LoginPage> {
     ]);
   }
 
-  FutureBuilder<int> buildFutureBuilder() {
-    return FutureBuilder<int>(
+  FutureBuilder<int?> buildFutureBuilder() {
+    return FutureBuilder<int?>(
       future: _statusCode,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          loading = false;
           // TODO: if _statuscode != 200 return mensagem de erro
           return const Home();
         } else if (snapshot.hasError) {

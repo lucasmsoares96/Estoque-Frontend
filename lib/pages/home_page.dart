@@ -1,5 +1,3 @@
-import 'package:estoque_frontend/models/user_model.dart';
-import 'package:estoque_frontend/pages/tab_fetch.dart';
 import 'package:estoque_frontend/pages/user_page.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -33,8 +31,8 @@ class Home extends StatelessWidget {
             break;
           case 1:
             returnValue = CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                child: UserFetchTab(),
+              return CupertinoPageScaffold(
+                child: Container(),
               );
             });
             break;

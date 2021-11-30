@@ -23,7 +23,6 @@ class AuthService extends ChangeNotifier {
   }
 
   // TODO: Substituir essa implementacao por token JWT
-  // PORQUE ESSA MERDA N FUNCIONAAAAAAAA
   _checkLogin() async {
     final nome = _prefs.getString('nome');
     final email = _prefs.getString('email');
@@ -39,7 +38,7 @@ class AuthService extends ChangeNotifier {
     await _prefs.setString("email", user.email);
   }
 
-  login({required String email, required String senha}) async {
+  Future<int?>? login({required String email, required String senha}) async {
     Map<String, String> credentials = {"email": email, "password": senha};
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8080/login'),
@@ -54,15 +53,16 @@ class AuthService extends ChangeNotifier {
       user = u;
       isLoading = false;
       notifyListeners();
-      // return response.statusCode;
+      return response.statusCode;
     } else {
       throw Exception('Erro ao fazer login');
     }
   }
 
-  _logout() async {
+  logout() async {
     await _prefs.remove("nome");
     await _prefs.remove("email");
+    user = null;
     notifyListeners();
   }
 }

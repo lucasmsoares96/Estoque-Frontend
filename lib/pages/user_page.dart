@@ -1,4 +1,5 @@
 import 'package:estoque_frontend/models/user_model.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -11,14 +12,14 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    User user = context.read<User>();
+    User? user = context.read<AuthService>().user;
     return CupertinoPageScaffold(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           CupertinoButton(
-            child: Text(user.name),
+            child: Text(user!.name),
             onPressed: () => Navigator.of(context, rootNavigator: true)
                 .pushReplacementNamed('/login'),
           ),

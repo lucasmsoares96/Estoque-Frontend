@@ -9,8 +9,7 @@ class AuthCheck extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: PROVIDER CHECK
-    final auth = Provider.of<AuthService>(context);
+    final auth = context.read<AuthService>();
     if (auth.isLoading) {
       return loading();
     } else if (auth.user == null) {
