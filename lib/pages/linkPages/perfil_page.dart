@@ -1,10 +1,9 @@
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
-
-import '../../services/auth_services.dart';
+import 'package:provider/provider.dart';
 
 class PerfilPage extends StatelessWidget {
-  const PerfilPage({ Key? key }) : super(key: key);
+  const PerfilPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +12,13 @@ class PerfilPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-            onPressed: (){
+            onPressed: () {
               context.read<AuthService>().logout();
               Navigator.of(context, rootNavigator: true)
                   .pushReplacementNamed('/login');
-            }, 
-            child: const Text("Sair"))
+            },
+            child: const Text("Sair"),
+          )
         ],
       ),
     );

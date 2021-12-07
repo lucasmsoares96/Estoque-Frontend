@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'linkPages/administrador_page.dart';
 import 'linkPages/gerenciador_page.dart';
 import 'linkPages/historico_page.dart';
-import 'linkPages/inicio_page.dart';
 import 'linkPages/perfil_page.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +16,6 @@ class _HomeState extends State<Home> {
   int _index = 0;
 
   _selectedPage(int index) {
-    /* print(index.toString()); */
     setState(() => _index = index);
   }
 
@@ -53,36 +52,52 @@ class _HomeState extends State<Home> {
         ),
         actions: [
           TextButton(
-              onPressed: () {
-                _selectedPage(0);
-              },
-              child: const Text("Gerenciar Produtos",
-                  style: TextStyle(color: Colors.white))),
+            onPressed: () {
+              _selectedPage(0);
+            },
+            child: const Text(
+              "Gerenciar Produtos",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: _space, vertical: 10)),
+            padding: EdgeInsets.symmetric(horizontal: _space, vertical: 10),
+          ),
           TextButton(
-              onPressed: () {
-                _selectedPage(1);
-              },
-              child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child:
-                      Text("Perfil", style: TextStyle(color: Colors.white)))),
+            onPressed: () {
+              _selectedPage(1);
+            },
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                "Perfil",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
           Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
           TextButton(
-              onPressed: () {
-                _selectedPage(2);
-              },
-              child: const Text("Administração",
-                  style: TextStyle(color: Colors.white))),
+            onPressed: () {
+              _selectedPage(2);
+            },
+            child: const Text(
+              "Administração",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
           TextButton(
-              onPressed: () {
-                _selectedPage(3);
-              },
-              child: const Text("Histórico",
-                  style: TextStyle(color: Colors.white))),
-          Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
+            onPressed: () {
+              _selectedPage(3);
+            },
+            child: const Text(
+              "Histórico",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: _space),
+          ),
         ],
       ),
       body: _getPageItem(_index),

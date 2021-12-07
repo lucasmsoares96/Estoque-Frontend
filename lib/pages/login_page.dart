@@ -68,67 +68,74 @@ class _LoginPageState extends State<LoginPage> {
     return Form(
       key: _formKey,
       child: Container(
-          width: 500,
-          decoration: const BoxDecoration(color: Colors.white10),
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: ListView(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            children: [
-              Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: TextFormField(
-                    cursorColor: Colors.white,
-                    decoration: inputDecoration("Email", Icons.person_outlined),
-                    controller: _emailController,
-                    enabled: !loading,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Digite seu email.";
-                      }
-                      return null;
-                    },
-                  )),
-              Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: TextFormField(
-                    cursorColor: Colors.white,
-                    decoration: inputDecoration("Senha", Icons.lock_outlined),
-                    controller: _passwordController,
-                    enabled: !loading,
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Digite uma senha.';
-                      }
-                      return null;
-                    },
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(top: 5, right: 70, left: 70),
-                child: ElevatedButton(
-                    child: loading
-                        ? const CircularProgressIndicator()
-                        : const Text("Login"),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          loading = true;
-                          _statusCode = context.read<AuthService>().login(
-                              email: _emailController.text,
-                              senha: _passwordController.text);
-                        });
-                      }
-                    }),
+        width: 500,
+        decoration: const BoxDecoration(color: Colors.white10),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: TextFormField(
+                cursorColor: Colors.white,
+                decoration: inputDecoration("Email", Icons.person_outlined),
+                controller: _emailController,
+                enabled: !loading,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Digite seu email.";
+                  }
+                  return null;
+                },
               ),
-              CupertinoButton(
-                  child: const Text(
-                    "Esqueci minha senha",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {})
-            ],
-          )),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: TextFormField(
+                cursorColor: Colors.white,
+                decoration: inputDecoration("Senha", Icons.lock_outlined),
+                controller: _passwordController,
+                enabled: !loading,
+                obscureText: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Digite uma senha.';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5, right: 70, left: 70),
+              child: ElevatedButton(
+                child: loading
+                    ? const CircularProgressIndicator()
+                    : const Text("Login"),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(
+                      () {
+                        loading = true;
+                        _statusCode = context.read<AuthService>().login(
+                            email: _emailController.text,
+                            senha: _passwordController.text);
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+            CupertinoButton(
+              child: const Text(
+                "Esqueci minha senha",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {},
+            )
+          ],
+        ),
+      ),
     );
   }
 
