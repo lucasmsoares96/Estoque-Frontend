@@ -24,6 +24,7 @@ class User {
     return User(
       cpf: json["cpf"],
       name: json["name"],
+      token: json["token"],
       birthDay: json["birthDay"],
       userType: json["userType"],
       email: json["email"],
