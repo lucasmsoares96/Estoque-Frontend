@@ -59,6 +59,23 @@ class AuthService extends ChangeNotifier {
       return response.statusCode;
     }
   }
+  // Aqui nao foi usado o notifylisteners,mas pode ser usado em implementacoes futuras
+  // Lista de usuarios em um repositorio atualizando dps de um usuario registrado
+
+  register(User user) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8080/registerUser'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonDecode(user.toMap()),
+    );
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(response.body);
+    }
+  }
 
   logout() async {
     await _prefs.remove("nome");
