@@ -1,8 +1,9 @@
 //TODO: Retirar possibilidade de null assigment
 // null assigment feito apenas para testes
 class User {
-  late String name;
-  late String email;
+  final String name;
+  final String email;
+  final String token;
   late String? cpf;
   late String? birthDay;
   late String? userType;
@@ -12,6 +13,7 @@ class User {
   User(
       {required this.name,
       required this.email,
+      required this.token,
       this.cpf,
       this.birthDay,
       this.userType,

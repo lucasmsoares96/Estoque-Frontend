@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:estoque_frontend/models/user_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,20 +24,22 @@ class AuthService extends ChangeNotifier {
     _prefs = await SharedPreferences.getInstance();
   }
 
-  // TODO: Substituir essa implementacao por token JWT
   _checkLogin() async {
-    final nome = _prefs.getString('nome');
-    final email = _prefs.getString('email');
-    if (nome != null && email != null) {
-      user = User(name: nome, email: email);
+    final token = _prefs.getString('token');
+    if (token != null) {
+      final jwt = JWT.verify(token, SecretKey('randomword'));
+      user = User(
+        name: jwt.payload["nome"],
+        email: jwt.payload["email"],
+        token: token,
+      );
     }
     isLoading = false;
     notifyListeners();
   }
 
   _setLoginCache(User user) async {
-    await _prefs.setString("nome", user.name);
-    await _prefs.setString("email", user.email);
+    await _prefs.setString("nome", user.token);
   }
 
   Future<int?>? login({required String email, required String senha}) async {
@@ -49,11 +52,24 @@ class AuthService extends ChangeNotifier {
       body: jsonEncode(credentials),
     );
     if (response.statusCode == 200) {
-      User u = User.fromJson(jsonDecode(response.body));
-      _setLoginCache(u);
-      user = u;
-      isLoading = false;
-      notifyListeners();
+      try {
+        // Verify a token
+        final jwt = JWT.verify(response.body, SecretKey('randomword'));
+        print('Payload: ${jwt.payload}');
+        User u = User(
+          name: jwt.payload["nome"],
+          email: jwt.payload["email"],
+          token: response.body,
+        );
+        _setLoginCache(u);
+        user = u;
+        isLoading = false;
+        notifyListeners();
+      } on JWTExpiredError {
+        print('jwt expired');
+      } on JWTError catch (ex) {
+        print(ex.message); // ex: invalid signature
+      }
       return response.statusCode;
     } else {
       return response.statusCode;
@@ -78,8 +94,7 @@ class AuthService extends ChangeNotifier {
   }
 
   logout() async {
-    await _prefs.remove("nome");
-    await _prefs.remove("email");
+    await _prefs.remove("token");
     user = null;
     notifyListeners();
   }
