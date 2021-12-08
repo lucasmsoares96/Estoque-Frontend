@@ -1,21 +1,22 @@
 //TODO: Retirar possibilidade de null assigment
 // null assigment feito apenas para testes
+//TODO: Arrumar o birthDay
 class User {
   final String name;
   final String email;
-  final String token;
+  late String? token;
   late String? cpf;
-  late String? birthDay;
+  String birthDay;
   late String? userType;
-  late String? isAdmin;
+  late bool? isAdmin;
   late String? password;
 
   User(
       {required this.name,
       required this.email,
-      required this.token,
+      this.token,
       this.cpf,
-      this.birthDay,
+      this.birthDay = '1999-01-01',
       this.userType,
       this.isAdmin,
       this.password});

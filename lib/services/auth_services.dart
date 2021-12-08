@@ -39,7 +39,7 @@ class AuthService extends ChangeNotifier {
   }
 
   _setLoginCache(User user) async {
-    await _prefs.setString("token", user.token);
+    await _prefs.setString("token", user.token!);
   }
 
   Future<int?>? login({required String email, required String senha}) async {
@@ -75,23 +75,23 @@ class AuthService extends ChangeNotifier {
       return response.statusCode;
     }
   }
-  // Aqui nao foi usado o notifylisteners,mas pode ser usado em implementacoes futuras
-  // Lista de usuarios em um repositorio atualizando dps de um usuario registrado
 
-  register(User user) async {
+  Future<int?>? register(User user) async {
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8080/registerUser'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonDecode(user.toMap()),
+      body: jsonEncode(user.toMap()),
     );
     if (response.statusCode == 200) {
-      return response.body;
+      return response.statusCode;
     } else {
-      throw Exception(response.body);
+      return response.statusCode;
     }
   }
+  // Aqui nao foi usado o notifylisteners,mas pode ser usado em implementacoes futuras
+  // Lista de usuarios em um repositorio atualizando dps de um usuario registrado
 
   logout() async {
     await _prefs.remove("token");

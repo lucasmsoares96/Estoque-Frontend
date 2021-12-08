@@ -1,5 +1,8 @@
+import 'package:estoque_frontend/pages/linkPages/adduser_page.dart';
 import 'package:flutter/material.dart';
+import 'adduser_page.dart';
 
+//TODO Deixar a listar dinamica
 final List<String> entries = <String>[
   'A',
   'B',
@@ -44,50 +47,64 @@ class AdministracaoPage extends StatelessWidget {
             children: [
               Expanded(
                 flex: 6,
-                child: SizedBox(
-                  height: 300.0,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: entries.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        children: <Widget>[
-                          Center(
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 50,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: NetworkImage(
-                                      "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg"),
+                child: Column(children: <Widget>[
+                  //TODO: Criar uma row com barra de pesquisa e o icon button
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    color: Colors.black,
+                    onPressed: () => showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return const AddUser();
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 300.0,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: entries.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Row(
+                          children: <Widget>[
+                            Center(
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: 50,
+                                height: 50,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(
+                                        "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg"),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.topLeft,
-                            padding: const EdgeInsets.all(10),
-                            child: Text(
-                              'Nome ${entries[index]}',
-                              style: const TextStyle(
-                                decoration: TextDecoration.none,
-                                color: Colors.black,
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: 'Oswald',
+                            Container(
+                              alignment: Alignment.topLeft,
+                              padding: const EdgeInsets.all(10),
+                              child: Text(
+                                'Nome ${entries[index]}',
+                                style: const TextStyle(
+                                  decoration: TextDecoration.none,
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: 'Oswald',
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(),
+                          ],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(),
+                    ),
                   ),
-                ),
+                ]),
               ),
               Expanded(
                 flex: 4,
