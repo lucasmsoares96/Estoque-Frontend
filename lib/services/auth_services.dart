@@ -39,7 +39,7 @@ class AuthService extends ChangeNotifier {
   }
 
   _setLoginCache(User user) async {
-    await _prefs.setString("nome", user.token);
+    await _prefs.setString("token", user.token);
   }
 
   Future<int?>? login({required String email, required String senha}) async {
