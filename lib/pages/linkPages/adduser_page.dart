@@ -26,6 +26,7 @@ class _AddUserState extends State<AddUser> {
   final TextEditingController _cpfController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _userController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   inputDecoration(String hint) {
     return InputDecoration(
@@ -46,263 +47,335 @@ class _AddUserState extends State<AddUser> {
         height: 600,
         width: 600,
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const CircleAvatar(
-                radius: 70,
-                backgroundColor: Colors.grey,
-                child: Icon(
-                  Icons.person,
-                  size: 90,
-                  color: Colors.white,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const CircleAvatar(
+                  radius: 70,
+                  backgroundColor: Colors.grey,
+                  child: Icon(
+                    Icons.person,
+                    size: 90,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const Text('Informações do usuario',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Nome:',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: TextFormField(
-                                cursorColor: Colors.black,
-                                decoration: inputDecoration("Nome"),
-                                controller: _nameController,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Telefone:',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: TextFormField(
-                                cursorColor: Colors.black,
-                                decoration: inputDecoration("(DDD)9..."),
-                                controller: _telephoneController,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Email:',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: TextFormField(
-                                cursorColor: Colors.black,
-                                decoration:
-                                    inputDecoration("exemplo@exemplo.com"),
-                                controller: _emailController,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Função:',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: TextFormField(
-                                cursorColor: Colors.black,
-                                decoration: inputDecoration(""),
-                                controller: _functionController,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Text(
-                    'CPF:',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 10),
-                    child: TextFormField(
-                      cursorColor: Colors.black,
-                      decoration: inputDecoration("xxx.xxx.xxx-xx"),
-                      controller: _cpfController,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 15,
                     ),
-                  ),
-                  SwitchListTile(
-                    title: const Text("Usuario"),
-                    subtitle: const Text("É administrador?"),
-                    secondary: const Icon(Icons.add_moderator_outlined),
-                    activeColor: Colors.purple,
-                    value: _isAdmin,
-                    onChanged: (e) => setState(
-                      () {
-                        _isAdmin = e;
-                      },
+                    const Text('Informações do usuário',
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold)),
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const Text('Informações do Login',
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Nome:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: TextFormField(
+                                  maxLength: 50,
+                                  cursorColor: Colors.black,
+                                  decoration: inputDecoration("Nome"),
+                                  controller: _nameController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "preencha com o seu nome";
+                                    }
+                                    if (!RegExp(r"^[a-zA-Z ]")
+                                        .hasMatch(value)) {
+                                      return "preencha com um nome válido";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Telefone:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: TextFormField(
+                                  maxLength: 12,
+                                  cursorColor: Colors.black,
+                                  decoration: inputDecoration("(DDD)9..."),
+                                  controller: _telephoneController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "preencha com o seu telefone";
+                                    }
+                                    if (!RegExp(r"[0 - 9]").hasMatch(value)) {
+                                      return "preencha com um telefone válido";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Email:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: TextFormField(
+                                  cursorColor: Colors.black,
+                                  decoration:
+                                      inputDecoration("exemplo@exemplo.com"),
+                                  controller: _emailController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "preencha com o seu email";
+                                    }
+                                    if (!RegExp(
+                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                        .hasMatch(value)) {
+                                      return "preencha com um email válido";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Função:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: TextFormField(
+                                  cursorColor: Colors.black,
+                                  decoration: inputDecoration("Cargo"),
+                                  controller: _functionController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "preencha com a sua função";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Text(
+                      'CPF:',
+                      textAlign: TextAlign.left,
                       style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Usuário:',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: TextFormField(
-                                cursorColor: Colors.black,
-                                decoration: inputDecoration(""),
-                                controller: _userController,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Senha:',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: TextFormField(
-                                cursorColor: Colors.black,
-                                decoration: inputDecoration(""),
-                                controller: _passwordController,
-                                obscureText: true,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        child: const Text('Cancelar'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      child: TextFormField(
+                        maxLength: 11,
+                        cursorColor: Colors.black,
+                        decoration: inputDecoration("xxx.xxx.xxx-xx"),
+                        controller: _cpfController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "preencha com o seu cpf";
+                          }
+                          if (!RegExp(r"[0 - 9]").hasMatch(value)) {
+                            return "preencha com um cpf válido";
+                          }
+                          return null;
                         },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.purple,
-                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  //TODO: Mensagem de erro e de sucesso no cadastro
-                  Expanded(
-                    child: SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
-                        child: const Text('Cadastrar Usuario'),
-                        onPressed: () {
-                          setState(() {
-                            User user = User(
-                              name: _nameController.text,
-                              email: _emailController.text,
-                              cpf: _cpfController.text,
-                              userType: _functionController.text,
-                              password: _passwordController.text,
-                              isAdmin: _isAdmin,
-                              registerDate: _formattedDate,
-                            );
-                            context.read<AuthService>().register(user);
+                    SwitchListTile(
+                      title: const Text("Usuario"),
+                      subtitle: const Text("É administrador?"),
+                      secondary: const Icon(Icons.add_moderator_outlined),
+                      activeColor: Colors.purple,
+                      value: _isAdmin,
+                      onChanged: (e) => setState(
+                        () {
+                          _isAdmin = e;
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Text('Informações do Login',
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Usuário:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: TextFormField(
+                                  cursorColor: Colors.black,
+                                  decoration: inputDecoration(""),
+                                  controller: _userController,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "preencha com o seu usuário";
+                                    }
+                                    if (!RegExp(
+                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                        .hasMatch(value)) {
+                                      return "preencha com um email válido";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Senha:',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: TextFormField(
+                                  cursorColor: Colors.black,
+                                  decoration: inputDecoration(""),
+                                  controller: _passwordController,
+                                  obscureText: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "preencha com a sua senha";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          child: const Text('Cancelar'),
+                          onPressed: () {
                             Navigator.of(context).pop();
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.purple,
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.purple,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    //TODO: Mensagem de erro e de sucesso no cadastro
+                    Expanded(
+                      child: SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          child: const Text('Cadastrar Usuario'),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              return;
+                            }
+                            setState(() {
+                              User user = User(
+                                name: _nameController.text,
+                                email: _emailController.text,
+                                cpf: _cpfController.text,
+                                userType: _functionController.text,
+                                password: _passwordController.text,
+                                isAdmin: _isAdmin,
+                                registerDate: _formattedDate,
+                              );
+                              context.read<AuthService>().register(user);
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.purple,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
