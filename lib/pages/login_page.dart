@@ -15,8 +15,27 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  Future<int?>? _statusCode;
   bool loading = false;
+
+  login() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      await context
+          .read<AuthService>()
+          .login(email: _emailController.text, senha: _passwordController.text);
+    } catch (e) {
+      setState(
+        () {
+          loading = false;
+        },
+      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
   inputDecoration(String hint, IconData icon) {
     return InputDecoration(
       icon: Icon(
@@ -45,8 +64,6 @@ class _LoginPageState extends State<LoginPage> {
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
                   colors: [
-                    /* Colors.blue,
-                    Colors.red,*/
                     Color.fromARGB(255, 222, 168, 254),
                     Color.fromARGB(255, 158, 79, 222),
                   ],
@@ -54,9 +71,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Center(
-              child: (_statusCode == null)
-                  ? buildForm(context)
-                  : buildFutureBuilder(),
+              child: buildForm(context),
             ),
           ],
         ),
@@ -108,25 +123,22 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 5, right: 70, left: 70),
-              child: ElevatedButton(
-                child: loading
-                    ? const CircularProgressIndicator()
-                    : const Text("Login"),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(
-                      () {
-                        loading = true;
-                        _statusCode = context.read<AuthService>().login(
-                            email: _emailController.text,
-                            senha: _passwordController.text);
+              child: !loading
+                  ? ElevatedButton(
+                      child: const Text("Login"),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          login();
+                        }
                       },
-                    );
-                  }
-                },
-              ),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
             ),
-            CupertinoButton(
+            TextButton(
               child: const Text(
                 "Esqueci minha senha",
                 style: TextStyle(color: Colors.white),
@@ -136,40 +148,6 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-    );
-  }
-
-  FutureBuilder<int?> buildFutureBuilder() {
-    return FutureBuilder<int?>(
-      future: _statusCode,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if (snapshot.data != 200) {
-            return AlertDialog(
-              title: const Text('Falha ao logar'),
-              content: const Text('Usuário e/ou senha inválidos'),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('OK'),
-                  onPressed: () {
-                    setState(
-                      () {
-                        _statusCode = null;
-                        loading = false;
-                      },
-                    );
-                  },
-                ),
-              ],
-            );
-          } else {
-            return const Home();
-          }
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return const CupertinoActivityIndicator();
-      },
     );
   }
 }

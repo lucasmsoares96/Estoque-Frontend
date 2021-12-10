@@ -6,6 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+//TODO: Implementar a class authexception de forma correta
+class AuthException implements Exception {
+  String message;
+  AuthException(this.message);
+}
+
 class AuthService extends ChangeNotifier {
   late SharedPreferences _prefs;
   User? user;
@@ -43,7 +49,8 @@ class AuthService extends ChangeNotifier {
     await _prefs.setString("token", user.token!);
   }
 
-  Future<int?>? login({required String email, required String senha}) async {
+//TODO: Tratar melhor as mensagens de erro
+  login({required String email, required String senha}) async {
     Map<String, String> credentials = {"email": email, "password": senha};
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8080/login'),
@@ -53,6 +60,9 @@ class AuthService extends ChangeNotifier {
       body: jsonEncode(credentials),
     );
     if (response.statusCode == 200) {
+      if (response.body == "" || response.body == null) {
+        throw "No response from server";
+      }
       try {
         // Verify a token
         final jwt = JWT.verify(response.body, SecretKey('randomword'));
@@ -63,21 +73,23 @@ class AuthService extends ChangeNotifier {
           isAdmin: jwt.payload["isAdmin"] == 0 ? true : false,
           token: response.body,
         );
-        _setLoginCache(user!);
-        isLoading = false;
-        notifyListeners();
+        _setLoginCache(u);
+        user = u;
       } on JWTExpiredError {
-        print('jwt expired');
+        throw "jwt expired";
       } on JWTError catch (ex) {
-        print(ex.message); // ex: invalid signature
+        throw ex.message;
       }
-      return response.statusCode;
+      isLoading = false;
+      notifyListeners();
     } else {
-      return response.statusCode;
+      throw "Error in connection";
     }
   }
 
-  Future<int?>? register(User user) async {
+  register(User user) async {
+    print("MAPA:");
+    print(user.toMap());
     final response = await http.post(
       Uri.parse('http://127.0.0.1:8080/registerUser'),
       headers: <String, String>{
@@ -85,14 +97,11 @@ class AuthService extends ChangeNotifier {
       },
       body: jsonEncode(user.toMap()..["jwt"] = this.user!.token),
     );
-    if (response.statusCode == 200) {
-      return response.statusCode;
-    } else {
-      return response.statusCode;
+
+    if (response.statusCode != 200) {
+      throw "Erro ao cadastrar usuario";
     }
   }
-  // Aqui nao foi usado o notifylisteners,mas pode ser usado em implementacoes futuras
-  // Lista de usuarios em um repositorio atualizando dps de um usuario registrado
 
   logout() async {
     await _prefs.remove("token");
