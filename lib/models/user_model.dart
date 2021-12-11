@@ -6,7 +6,7 @@ class User {
   final String email;
   late String? token;
   late String? cpf;
-  String birthDay;
+  late String? registerDate;
   late String? userType;
   late bool? isAdmin;
   late String? password;
@@ -16,7 +16,7 @@ class User {
       required this.email,
       this.token,
       this.cpf,
-      this.birthDay = '1999-01-01',
+      this.registerDate,
       this.userType,
       this.isAdmin,
       this.password});
@@ -26,7 +26,7 @@ class User {
       cpf: json["cpf"],
       name: json["name"],
       token: json["token"],
-      birthDay: json["birthDay"],
+      registerDate: json["birthDay"],
       userType: json["userType"],
       email: json["email"],
       isAdmin: json["isAdmin"],
@@ -37,7 +37,7 @@ class User {
     return <String, dynamic>{
       "cpf": cpf,
       "name": name,
-      "birthDay": birthDay,
+      "birthDay": registerDate,
       "userType": userType,
       "email": email,
       "isAdmin": isAdmin,

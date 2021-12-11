@@ -1,11 +1,18 @@
 import 'package:estoque_frontend/models/user_model.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+// ignore: unnecessary_new
+DateTime now = new DateTime.now();
+// ignore: unnecessary_new
+DateTime date = new DateTime(now.year, now.month, now.day);
+
+String _formattedDate = DateFormat('yyyy-MM-dd').format(now);
 
 class AddUser extends StatefulWidget {
   const AddUser({Key? key}) : super(key: key);
-
   @override
   _AddUserState createState() => _AddUserState();
 }
@@ -174,7 +181,11 @@ class _AddUserState extends State<AddUser> {
                       controller: _cpfController,
                     ),
                   ),
-                  Switch(
+                  SwitchListTile(
+                    title: const Text("Usuario"),
+                    subtitle: const Text("É administrador?"),
+                    secondary: const Icon(Icons.add_moderator_outlined),
+                    activeColor: Colors.purple,
                     value: _isAdmin,
                     onChanged: (e) => setState(
                       () {
@@ -277,8 +288,10 @@ class _AddUserState extends State<AddUser> {
                               userType: _functionController.text,
                               password: _passwordController.text,
                               isAdmin: _isAdmin,
+                              registerDate: _formattedDate,
                             );
                             context.read<AuthService>().register(user);
+                            Navigator.of(context).pop();
                           });
                         },
                         style: ElevatedButton.styleFrom(
