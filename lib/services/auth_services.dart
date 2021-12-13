@@ -67,7 +67,7 @@ class AuthService extends ChangeNotifier {
         // Verify a token
         final jwt = JWT.verify(response.body, SecretKey('randomword'));
         print('Payload: ${jwt.payload}');
-        user = User(
+        User u = User(
           name: jwt.payload["name"],
           email: jwt.payload["email"],
           isAdmin: jwt.payload["isAdmin"] == 0 ? true : false,
