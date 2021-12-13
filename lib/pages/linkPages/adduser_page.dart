@@ -226,7 +226,9 @@ class _AddUserState extends State<AddUser> {
                           if (value == null || value.isEmpty) {
                             return "preencha com o seu cpf";
                           }
-                          if (!RegExp(r"[0 - 9]").hasMatch(value)) {
+                          if (!RegExp(
+                                  "([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})")
+                              .hasMatch(value)) {
                             return "preencha com um cpf válido";
                           }
                           return null;
@@ -274,14 +276,15 @@ class _AddUserState extends State<AddUser> {
                                   decoration: inputDecoration(""),
                                   controller: _userController,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return "preencha com o seu usuário";
-                                    }
-                                    if (!RegExp(
-                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                        .hasMatch(value)) {
-                                      return "preencha com um email válido";
-                                    }
+                                    // TODO: aqui não é email
+                                    // if (value == null || value.isEmpty) {
+                                    //   return "preencha com o seu usuário";
+                                    // }
+                                    // if (!RegExp(
+                                    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    //     .hasMatch(value)) {
+                                    //   return "preencha com um email válido";
+                                    // }
                                     return null;
                                   },
                                 ),
@@ -350,21 +353,22 @@ class _AddUserState extends State<AddUser> {
                           child: const Text('Cadastrar Usuario'),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              return;
-                            }
-                            setState(() {
-                              User user = User(
-                                name: _nameController.text,
-                                email: _emailController.text,
-                                cpf: _cpfController.text,
-                                userType: _functionController.text,
-                                password: _passwordController.text,
-                                isAdmin: _isAdmin,
-                                registerDate: _formattedDate,
+                              setState(
+                                () {
+                                  User user = User(
+                                    name: _nameController.text,
+                                    email: _emailController.text,
+                                    cpf: _cpfController.text,
+                                    userType: _functionController.text,
+                                    password: _passwordController.text,
+                                    isAdmin: _isAdmin,
+                                    registerDate: _formattedDate,
+                                  );
+                                  context.read<AuthService>().register(user);
+                                  Navigator.of(context).pop();
+                                },
                               );
-                              context.read<AuthService>().register(user);
-                              Navigator.of(context).pop();
-                            });
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             primary: Colors.purple,
