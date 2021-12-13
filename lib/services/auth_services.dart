@@ -29,8 +29,9 @@ class AuthService extends ChangeNotifier {
     if (token != null) {
       final jwt = JWT.verify(token, SecretKey('randomword'));
       user = User(
-        name: jwt.payload["nome"],
+        name: jwt.payload["name"],
         email: jwt.payload["email"],
+        isAdmin: jwt.payload["isAdmin"] == 0 ? true : false,
         token: token,
       );
     }
@@ -56,13 +57,13 @@ class AuthService extends ChangeNotifier {
         // Verify a token
         final jwt = JWT.verify(response.body, SecretKey('randomword'));
         print('Payload: ${jwt.payload}');
-        User u = User(
-          name: jwt.payload["nome"],
+        user = User(
+          name: jwt.payload["name"],
           email: jwt.payload["email"],
+          isAdmin: jwt.payload["isAdmin"] == 0 ? true : false,
           token: response.body,
         );
-        _setLoginCache(u);
-        user = u;
+        _setLoginCache(user!);
         isLoading = false;
         notifyListeners();
       } on JWTExpiredError {
