@@ -83,7 +83,7 @@ class AuthService extends ChangeNotifier {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(user.toMap()),
+      body: jsonEncode(user.toMap()..["jwt"] = this.user!.token),
     );
     if (response.statusCode == 200) {
       return response.statusCode;
