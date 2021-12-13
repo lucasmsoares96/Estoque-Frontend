@@ -60,7 +60,7 @@ class AuthService extends ChangeNotifier {
       body: jsonEncode(credentials),
     );
     if (response.statusCode == 200) {
-      if (response.body == "" || response.body == null) {
+      if (response.body == "") {
         throw "No response from server";
       }
       try {
