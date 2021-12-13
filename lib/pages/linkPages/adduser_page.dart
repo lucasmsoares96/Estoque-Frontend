@@ -27,6 +27,7 @@ class _AddUserState extends State<AddUser> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _userController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   inputDecoration(String hint) {
     return InputDecoration(
@@ -38,6 +39,28 @@ class _AddUserState extends State<AddUser> {
           borderSide: BorderSide(color: Colors.black)),
       hintText: hint,
     );
+  }
+
+  //TODO: mudar o jeito de mostrar o erro e o sucesso para serem distintos
+  // Mostrar um texto em vermelho no dialog para mostrar o erro
+  registerUser(User user) async {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      if (await context.read<AuthService>().register(user)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Usuario cadastrado com sucesso")));
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -349,24 +372,22 @@ class _AddUserState extends State<AddUser> {
                       child: SizedBox(
                         height: 50,
                         child: ElevatedButton(
-                          child: const Text('Cadastrar Usuario'),
+                          child: (!isLoading
+                              ? const Text('Cadastrar Usuario')
+                              : const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              setState(
-                                () {
-                                  User user = User(
-                                    name: _nameController.text,
-                                    email: _emailController.text,
-                                    cpf: _cpfController.text,
-                                    userType: _functionController.text,
-                                    password: _passwordController.text,
-                                    isAdmin: _isAdmin,
-                                    entryDate: _formattedDate,
-                                  );
-                                  context.read<AuthService>().register(user);
-                                  Navigator.of(context).pop();
-                                },
-                              );
+                              registerUser(User(
+                                name: _nameController.text,
+                                email: _emailController.text,
+                                cpf: _cpfController.text,
+                                userType: _functionController.text,
+                                password: _passwordController.text,
+                                isAdmin: _isAdmin,
+                                entryDate: _formattedDate,
+                              ));
                             }
                           },
                           style: ElevatedButton.styleFrom(

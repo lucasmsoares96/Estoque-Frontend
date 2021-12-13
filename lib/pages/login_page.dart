@@ -16,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   bool loading = false;
 
   login() async {
+    ScaffoldMessenger.of(context).clearSnackBars();
     setState(() {
       loading = true;
     });
