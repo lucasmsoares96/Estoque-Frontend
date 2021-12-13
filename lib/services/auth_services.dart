@@ -91,7 +91,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  register(User user) async {
+  Future<bool> register(User user) async {
     print("MAPA:");
     print(user.toMap());
     final response = await http.post(
@@ -104,6 +104,8 @@ class AuthService extends ChangeNotifier {
 
     if (response.statusCode != 200) {
       throw "Erro ao cadastrar usuario";
+    } else {
+      return true;
     }
   }
 
