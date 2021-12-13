@@ -362,7 +362,7 @@ class _AddUserState extends State<AddUser> {
                                     userType: _functionController.text,
                                     password: _passwordController.text,
                                     isAdmin: _isAdmin,
-                                    registerDate: _formattedDate,
+                                    entryDate: _formattedDate,
                                   );
                                   context.read<AuthService>().register(user);
                                   Navigator.of(context).pop();

@@ -1,12 +1,11 @@
 //TODO: Retirar possibilidade de null assigment
 // null assigment feito apenas para testes
-//TODO: Arrumar o birthDay
 class User {
   final String name;
   final String email;
   late String? token;
   late String? cpf;
-  late String? registerDate;
+  late String? entryDate;
   late String? userType;
   late bool? isAdmin;
   late String? password;
@@ -16,7 +15,7 @@ class User {
       required this.email,
       this.token,
       this.cpf,
-      this.registerDate,
+      this.entryDate,
       this.userType,
       this.isAdmin,
       this.password});
@@ -26,7 +25,7 @@ class User {
       cpf: json["cpf"],
       name: json["name"],
       token: json["token"],
-      registerDate: json["birthDay"],
+      entryDate: json["entryDate"],
       userType: json["userType"],
       email: json["email"],
       isAdmin: json["isAdmin"],
@@ -37,7 +36,7 @@ class User {
     return <String, dynamic>{
       "cpf": cpf,
       "name": name,
-      "birthDay": registerDate,
+      "entryDate": entryDate,
       "userType": userType,
       "email": email,
       "isAdmin": isAdmin,
