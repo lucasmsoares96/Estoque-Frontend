@@ -21,6 +21,7 @@ class AuthService extends ChangeNotifier {
   User? user;
   bool isLoading = true;
 
+  get token => user?.token;
   AuthService() {
     _startLogin();
   }
