@@ -14,8 +14,6 @@ class PerfilPage extends StatelessWidget {
           ElevatedButton(
             onPressed: () {
               context.read<AuthService>().logout();
-              Navigator.of(context, rootNavigator: true)
-                  .pushReplacementNamed('/login');
             },
             child: const Text("Sair"),
           )

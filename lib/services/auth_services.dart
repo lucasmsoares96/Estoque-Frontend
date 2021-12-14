@@ -110,7 +110,7 @@ class AuthService extends ChangeNotifier {
   }
 
   logout() async {
-    await _prefs.remove("token");
+    await _prefs.clear();
     user = null;
     notifyListeners();
   }
