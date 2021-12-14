@@ -130,7 +130,9 @@ class _AddUserState extends State<AddUser> {
                                     if (value == null || value.isEmpty) {
                                       return "preencha com o seu telefone";
                                     }
-                                    if (!RegExp(r"[0 - 9]").hasMatch(value)) {
+                                    if (!RegExp(
+                                            r"^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))")
+                                        .hasMatch(value)) {
                                       return "preencha com um telefone válido";
                                     }
                                     return null;
