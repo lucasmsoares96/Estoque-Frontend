@@ -25,14 +25,14 @@ class _LoginPageState extends State<LoginPage> {
           .read<AuthService>()
           .login(email: _emailController.text, senha: _passwordController.text);
     } catch (e) {
-      setState(
-        () {
-          loading = false;
-        },
-      );
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }
+    setState(
+      () {
+        loading = false;
+      },
+    );
   }
 
   inputDecoration(String hint, IconData icon) {
