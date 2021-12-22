@@ -41,7 +41,7 @@ class AuthService extends ChangeNotifier {
       user = User(
         name: jwt.payload["name"],
         email: jwt.payload["email"],
-        isAdmin: jwt.payload["isAdmin"] == 0 ? true : false,
+        isAdmin: jwt.payload["isAdmin"] == 1 ? true : false,
         token: token,
       );
     }
@@ -54,7 +54,7 @@ class AuthService extends ChangeNotifier {
   }
 
 //TODO: Tratar melhor as mensagens de erro
-  login({required String email, required String senha}) async {
+  login({required String email, required String senha, }) async {
     Map<String, String> credentials = {"email": email, "password": senha};
     final response = await http.post(
       Uri.parse('$ip:$port/login'),

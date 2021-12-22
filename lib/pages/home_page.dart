@@ -1,9 +1,11 @@
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 import 'linkPages/administrador_page.dart';
 import 'linkPages/gerenciador_page.dart';
 import 'linkPages/historico_page.dart';
 import 'linkPages/perfil_page.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -75,16 +77,23 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
-          TextButton(
-            onPressed: () {
-              _selectedPage(2);
-            },
-            child: const Text(
-              "Administração",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          context.read<AuthService>().user!.isAdmin!  ? 
+          Row(
+            children: [
+              Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
+              TextButton(
+                onPressed: () {
+                  _selectedPage(2);
+                },
+                child: const Text(
+                  "Administração",
+                  style: TextStyle(color: Colors.white),
+                  ),
+                ),
+            ],
+          )
+          : const SizedBox(),
+          
           Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
           TextButton(
             onPressed: () {
