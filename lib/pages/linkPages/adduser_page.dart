@@ -311,6 +311,9 @@ class _AddUserState extends State<AddUser> {
                                     if (value == null || value.isEmpty) {
                                       return "preencha com a sua senha";
                                     }
+                                    if (value.length > 8) {
+                                      return "Limite máximo de caracteres ultrapassado";
+                                    }
                                     return null;
                                   },
                                 ),
