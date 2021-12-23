@@ -122,7 +122,7 @@ class _AddUserState extends State<AddUser> {
                                 padding:
                                     const EdgeInsets.only(top: 10, bottom: 10),
                                 child: TextFormField(
-                                  maxLength: 12,
+                                  maxLength: 11,
                                   cursorColor: Colors.black,
                                   decoration: inputDecoration("(DDD)9..."),
                                   controller: _telephoneController,
@@ -278,15 +278,9 @@ class _AddUserState extends State<AddUser> {
                                   decoration: inputDecoration(""),
                                   controller: _userController,
                                   validator: (value) {
-                                    // TODO: aqui não é email
-                                    // if (value == null || value.isEmpty) {
-                                    //   return "preencha com o seu usuário";
-                                    // }
-                                    // if (!RegExp(
-                                    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    //     .hasMatch(value)) {
-                                    //   return "preencha com um email válido";
-                                    // }
+                                    if (value == null || value.isEmpty) {
+                                      return "preencha com o seu usuário";
+                                    }
                                     return null;
                                   },
                                 ),
