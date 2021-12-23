@@ -1,9 +1,9 @@
 class Product {
-  late int id;
+  int? id;
   late String name;
   late String productType;
   Product({
-    required id,
+    id,
     required name,
     required productType,
   });

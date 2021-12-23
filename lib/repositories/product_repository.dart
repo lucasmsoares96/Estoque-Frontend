@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 
 class ProductRepository extends ChangeNotifier {
-  List<Product> _products = [];
-  List<Stock> _stocks = [];
-  ProductRepository() {}
+  final List<Product> _products = [];
+  final List<Stock> _stocks = [];
+  ProductRepository();
   fetchStock(String? token) async {
     if (token != null) {
       final response = await http.post(

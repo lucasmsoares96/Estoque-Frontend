@@ -1,4 +1,8 @@
+import 'package:estoque_frontend/models/product_model.dart';
+import 'package:estoque_frontend/models/stock_model.dart';
+import 'package:estoque_frontend/repositories/product_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -26,6 +30,7 @@ class _AddProductState extends State<AddProduct> {
   int _quantidade = 0;
   double _maxHeight = 375;
   final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
 
   _addQuantidade() {
     setState(
@@ -53,6 +58,27 @@ class _AddProductState extends State<AddProduct> {
         },
       );
     }
+  }
+
+  registerProduct(Product product) async {
+    print(product.name.toString());
+    ScaffoldMessenger.of(context).clearSnackBars();
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      if (await context.read<ProductRepository>().registerProduct(product)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Produto cadastrado com sucesso")));
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -210,19 +236,20 @@ class _AddProductState extends State<AddProduct> {
                       height: 50,
                       child: ElevatedButton(
                         child: const Text('Adicionar produto'),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            /* TODO resgistrar produto (ainda sem funcionar) */
+                            registerProduct(Product(
+                                name: _nameProduct.text,
+                                productType: _tagProduct.text));
                             print("Dados: \nNome: " +
                                 _nameProduct.text +
                                 "\nTag: " +
                                 _tagProduct.text +
                                 "\nQuantidade: " +
                                 _quantProduct.text);
-                            setState(
-                              () {
-                                Navigator.of(context).pop();
-                              },
-                            );
+
+                            Navigator.of(context).pop();
                           } else {
                             _updateHeight();
                           }

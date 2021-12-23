@@ -1,4 +1,5 @@
 import 'package:estoque_frontend/pages/login_page.dart';
+import 'package:estoque_frontend/repositories/product_repository.dart';
 import 'package:estoque_frontend/repositories/user_repository.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:estoque_frontend/widgets/auth_check.dart';
@@ -13,6 +14,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProvider(create: (context) => UserRepository()),
+        ChangeNotifierProvider(create: (context) => ProductRepository()),
       ],
       child: const App(),
     ),
