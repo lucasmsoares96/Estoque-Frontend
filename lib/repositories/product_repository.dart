@@ -34,7 +34,7 @@ class ProductRepository extends ChangeNotifier {
         throw "erro ao contactar o servidor";
       }
     } else {
-      throw "erro ao buscar usuarios";
+      throw "erro ao buscar estoque";
     }
   }
 
@@ -62,10 +62,26 @@ class ProductRepository extends ChangeNotifier {
         throw "erro ao contactar o servidor";
       }
     } else {
-      throw "erro ao buscar usuarios";
+      throw "erro ao buscar produtos";
     }
   }
 
-  UnmodifiableListView<Product> get listUsers =>
+  registerProduct(Product product) async {
+    print("MAPA:");
+    print(product.toMap());
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:8080/registerProduct'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(product.toMap()),
+    );
+
+    if (response.statusCode != 200) {
+      throw "Erro ao cadastrar produto";
+    }
+  }
+
+  UnmodifiableListView<Product> get listProducts =>
       UnmodifiableListView(_products);
 }
