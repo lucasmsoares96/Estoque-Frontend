@@ -2,7 +2,7 @@ import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 
 import 'linkPages/administrador_page.dart';
-import 'linkPages/gerenciador_page.dart';
+import 'linkPages/gerenciador/gerenciador_page.dart';
 import 'linkPages/historico_page.dart';
 import 'linkPages/perfil_page.dart';
 import 'package:provider/provider.dart';
