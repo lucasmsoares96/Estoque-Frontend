@@ -67,7 +67,7 @@ class _AddUserState extends State<AddUser> {
   Widget build(BuildContext context) {
     return AlertDialog(
       content: SizedBox(
-        height: 600,
+        height: 900,
         width: 600,
         child: SingleChildScrollView(
           child: Form(
