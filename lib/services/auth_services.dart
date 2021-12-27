@@ -75,7 +75,7 @@ class AuthService extends ChangeNotifier {
         User u = User(
           name: jwt.payload["name"],
           email: jwt.payload["email"],
-          isAdmin: jwt.payload["isAdmin"] == 0 ? true : false,
+          isAdmin: jwt.payload["isAdmin"] == 1 ? true : false,
           token: response.body,
         );
         _setLoginCache(u);
