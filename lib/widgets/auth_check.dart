@@ -1,5 +1,5 @@
 import 'package:estoque_frontend/pages/home_page.dart';
-import 'package:estoque_frontend/pages/login_page.dart';
+import 'package:estoque_frontend/pages/login/login_page.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
