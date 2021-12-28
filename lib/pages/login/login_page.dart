@@ -1,3 +1,4 @@
+import 'package:estoque_frontend/pages/login/components/dialog_login.dart';
 import 'package:provider/provider.dart';
 import 'package:estoque_frontend/pages/login/components/background_login.dart';
 import 'package:estoque_frontend/pages/login/components/button_login.dart';
@@ -18,26 +19,25 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _visibilityPassword = false;
   bool _loading = false;
-  TextEditingController _controllerPassword = TextEditingController();
-  TextEditingController _controllerUser     = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
+  final TextEditingController _controllerUser     = TextEditingController();
 
 
   void _changeVisibilityPassword() => setState(() => _visibilityPassword = !_visibilityPassword);
   void _changeLoadingStatus() => setState(() => _loading = !_loading);
 
-  Future<void> _onButtonLoginPressed() async {
+  Future<void> _onButtonLoginPressed(BuildContext context) async {
     if(_formKey.currentState!.validate()){
+      _changeLoadingStatus();
       try {
       await context
           .read<AuthService>()
           .login(email: _controllerUser.text, senha: _controllerPassword.text);
     } catch (e) {
-     
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      await genericDialog(context, "Algo deu errado", "Verifique suas credenciais e tente novemente.", "Ok");
+      }
     }
-
-    }
+    _changeLoadingStatus();
 
   }
 
@@ -66,8 +66,8 @@ class _LoginPageState extends State<LoginPage> {
                       ComponentTextfieldLogin( 
                         controller: _controllerUser,
                         validator: (value) {
-                          if (value!.isEmpty)                           return "*Campo Obrigatório";
-                          else                                          return null;
+                          if (value!.isEmpty) return "*Campo Obrigatório";
+                          else                return null;
                           },
                         hint: "Usuário",),
                       
@@ -76,8 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                         obscure: !_visibilityPassword,
                         hint: "Senha",
                         validator: (value) {
-                          if (value!.isEmpty)                           return "*Campo Obrigatório";
-                          else                                          return null;
+                          if (value!.isEmpty) return "*Campo Obrigatório";
+                          else                return null;
                           },
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -94,8 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                   )),
                   ComponentButtonLogin(
                     loading: _loading,
-                    changeLoadingStatus: () =>  _changeLoadingStatus(),
-                    onPressed: () async => await _onButtonLoginPressed(), 
+                    onPressed: () async => await _onButtonLoginPressed(context),
                     width: _width *0.18, 
                     text: "Entrar",),
 

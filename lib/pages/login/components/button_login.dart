@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 
 class ComponentButtonLogin extends StatelessWidget {
   final Future<void> Function()? onPressed; 
-  final void Function() changeLoadingStatus; 
   final bool loading;
   final double width;
   final String text;
@@ -11,20 +10,13 @@ class ComponentButtonLogin extends StatelessWidget {
     Key? key, 
     required this.text, 
     required this.loading , 
-    required  this.changeLoadingStatus, 
     this.onPressed, 
     required this.width }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed != null
-      ? () async{ 
-        changeLoadingStatus();
-        await onPressed!();
-        changeLoadingStatus();        
-      }
-      : null,
+      onTap: onPressed,
       child: Container(
         width: width,
         height: 55,
