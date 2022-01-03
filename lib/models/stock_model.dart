@@ -2,8 +2,8 @@ class Stock {
   late int id;
   late int quantity;
   Stock({
-    required id,
-    required quantity,
+    required this.id,
+    required this.quantity,
   });
   factory Stock.fromJson(Map<String, dynamic> json) {
     return Stock(
