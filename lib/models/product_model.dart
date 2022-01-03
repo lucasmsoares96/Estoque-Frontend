@@ -4,8 +4,8 @@ class Product {
   late String productType;
   Product({
     id,
-    required name,
-    required productType,
+    required String this.name,
+    required String this.productType,
   });
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
