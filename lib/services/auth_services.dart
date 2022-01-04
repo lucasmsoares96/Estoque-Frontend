@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:estoque_frontend/models/user_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,7 +34,7 @@ class AuthService extends ChangeNotifier {
   _checkLogin() async {
     final token = _prefs.getString('token');
     if (token != null) {
-      final jwt = JWT.verify(token, SecretKey('randomword'));
+      final jwt = JWT.verify(token, SecretKey(dotenv.env['secret']!));
       user = User(
         name: jwt.payload["name"],
         email: jwt.payload["email"],
@@ -65,7 +66,7 @@ class AuthService extends ChangeNotifier {
       }
       try {
         // Verify a token
-        final jwt = JWT.verify(response.body, SecretKey('randomword'));
+        final jwt = JWT.verify(response.body, SecretKey(dotenv.env['secret']!));
         print('Payload: ${jwt.payload}');
         User u = User(
           name: jwt.payload["name"],
