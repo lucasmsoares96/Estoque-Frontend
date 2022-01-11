@@ -1,5 +1,10 @@
 import 'package:estoque_frontend/pages/linkPages/gerenciador/add_product_popup.dart';
+import 'package:estoque_frontend/repositories/product_repository.dart';
+import 'package:estoque_frontend/repositories/user_repository.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/src/provider.dart';
 
 class GerenciadorPage extends StatelessWidget {
   const GerenciadorPage({Key? key}) : super(key: key);
@@ -63,9 +68,74 @@ class GerenciadorPage extends StatelessWidget {
                                     },
                                   ),
                               icon: const Icon(Icons.add)),
+                          IconButton(
+                              icon: const Icon(Icons.refresh_outlined),
+                              color: Colors.black,
+                              onPressed: () async {
+                                await context
+                                    .read<ProductRepository>()
+                                    .fetchProduct(
+                                        context.read<AuthService>().token);
+                                print(context
+                                    .read<ProductRepository>()
+                                    .listProducts
+                                    .toString());
+                              }),
                         ],
                       ),
                       const Divider(),
+                      SizedBox(
+                        height: 300.0,
+                        child: Consumer<ProductRepository>(
+                          builder: (context, produtos, child) {
+                            return produtos.listProducts.isEmpty
+                                ? Container()
+                                : ListView.separated(
+                                    padding: const EdgeInsets.all(8),
+                                    itemCount: produtos.listProducts.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Row(
+                                        children: <Widget>[
+                                          Center(
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              width: 50,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  fit: BoxFit.fill,
+                                                  image: NetworkImage(
+                                                      "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg"),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.topLeft,
+                                            padding: const EdgeInsets.all(10),
+                                            child: Text(
+                                              ' ${produtos.listProducts[index].name}',
+                                              style: const TextStyle(
+                                                decoration: TextDecoration.none,
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal,
+                                                fontFamily: 'Oswald',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                    separatorBuilder:
+                                        (BuildContext context, int index) =>
+                                            const Divider(),
+                                  );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
