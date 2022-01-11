@@ -69,14 +69,17 @@ class ProductRepository extends ChangeNotifier {
   }
 
   registerProduct(Product product) async {
-    print("MAPA:");
+    print("product map:");
     print(product.toMap());
+    Map<String, dynamic> json = <String, dynamic>{
+      "product": product.toMap(),
+    };
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8080/registerProduct'),
+      Uri.parse('http://127.0.0.1:8080/includeProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(product.toMap()),
+      body: jsonEncode(json),
     );
 
     if (response.statusCode != 200) {

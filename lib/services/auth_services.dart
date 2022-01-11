@@ -55,7 +55,10 @@ class AuthService extends ChangeNotifier {
   }
 
 //TODO: Tratar melhor as mensagens de erro
-  login({required String email, required String senha, }) async {
+  login({
+    required String email,
+    required String senha,
+  }) async {
     Map<String, String> credentials = {"email": email, "password": senha};
     final response = await http.post(
       Uri.parse('$ip:$port/login'),
@@ -93,14 +96,18 @@ class AuthService extends ChangeNotifier {
   }
 
   Future<bool> register(User user) async {
-    print("MAPA:");
+    print("user map:");
     print(user.toMap());
+    Map<String, dynamic> json = <String, dynamic>{
+      "user": user.toMap(),
+      "jwt": this.user!.token,
+    };
     final response = await http.post(
-      Uri.parse('$ip:$port/register'),
+      Uri.parse('$ip:$port/registerUser'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(user.toMap()..["jwt"] = this.user!.token),
+      body: jsonEncode(json),
     );
 
     if (response.statusCode != 200) {
