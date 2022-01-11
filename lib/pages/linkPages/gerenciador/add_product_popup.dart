@@ -1,8 +1,7 @@
 import 'package:estoque_frontend/models/product_model.dart';
-import 'package:estoque_frontend/models/stock_model.dart';
 import 'package:estoque_frontend/repositories/product_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -69,12 +68,20 @@ class _AddProductState extends State<AddProduct> {
       });
       if (await context.read<ProductRepository>().registerProduct(product)) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Produto cadastrado com sucesso")));
+          const SnackBar(
+            content: Text("Produto cadastrado com sucesso"),
+          ),
+        );
         Navigator.of(context).pop();
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+          ),
+        ),
+      );
     }
     setState(() {
       isLoading = false;

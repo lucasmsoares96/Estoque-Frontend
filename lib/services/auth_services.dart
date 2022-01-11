@@ -36,7 +36,7 @@ class AuthService extends ChangeNotifier {
   }
 
   _checkLogin() async {
-    final token = _prefs.getString('token');
+    final token = _prefs.getString('jwt');
     if (token != null) {
       final jwt = JWT.verify(token, SecretKey(dotenv.env['secret']!));
       user = User(
@@ -51,7 +51,7 @@ class AuthService extends ChangeNotifier {
   }
 
   _setLoginCache(User user) async {
-    await _prefs.setString("token", user.token!);
+    await _prefs.setString("jwt", user.token!);
   }
 
 //TODO: Tratar melhor as mensagens de erro

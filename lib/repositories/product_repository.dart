@@ -22,7 +22,7 @@ class ProductRepository extends ChangeNotifier {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, dynamic>{'token': token}),
+        body: jsonEncode(<String, dynamic>{'jwt': token}),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -49,7 +49,7 @@ class ProductRepository extends ChangeNotifier {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, dynamic>{'token': token}),
+        body: jsonEncode(<String, dynamic>{'jwt': token}),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
