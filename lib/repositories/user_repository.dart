@@ -4,6 +4,10 @@ import 'package:estoque_frontend/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final String port = dotenv.env['port']!;
+final String ip = dotenv.env['ip']!;
 
 class UserRepository extends ChangeNotifier {
   final List<User> _usuarios = [];
@@ -11,7 +15,7 @@ class UserRepository extends ChangeNotifier {
   fetchUser(String? token) async {
     if (token != null) {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8080/getUsers'),
+        Uri.parse('$ip:$port/getUsers'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

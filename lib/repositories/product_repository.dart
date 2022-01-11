@@ -3,9 +3,13 @@ import 'dart:collection';
 import 'package:estoque_frontend/models/product_model.dart';
 import 'package:estoque_frontend/models/stock_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
+
+final String port = dotenv.env['port']!;
+final String ip = dotenv.env['ip']!;
 
 class ProductRepository extends ChangeNotifier {
   final List<Product> _products = [];
@@ -14,7 +18,7 @@ class ProductRepository extends ChangeNotifier {
   fetchStock(String? token) async {
     if (token != null) {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8080/getStock'),
+        Uri.parse('$ip:$port/getStock'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -41,7 +45,7 @@ class ProductRepository extends ChangeNotifier {
   fetchProduct(String? token) async {
     if (token != null) {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8080/getProducts'),
+        Uri.parse('$ip:$port/getProducts'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -75,7 +79,7 @@ class ProductRepository extends ChangeNotifier {
       "product": product.toMap(),
     };
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8080/includeProduct'),
+      Uri.parse('$ip:$port/includeProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
