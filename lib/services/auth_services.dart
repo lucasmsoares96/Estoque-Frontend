@@ -7,6 +7,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+final String port = dotenv.env['port']!;
+final String ip = dotenv.env['ip']!;
+
 //TODO: Implementar a class authexception de forma correta
 class AuthException implements Exception {
   String message;
@@ -54,7 +57,7 @@ class AuthService extends ChangeNotifier {
   login({required String email, required String senha}) async {
     Map<String, String> credentials = {"email": email, "password": senha};
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8080/login'),
+      Uri.parse('$ip:$port/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -92,7 +95,7 @@ class AuthService extends ChangeNotifier {
     print("MAPA:");
     print(user.toMap());
     final response = await http.post(
-      Uri.parse('http://127.0.0.1:8080/registerUser'),
+      Uri.parse('$ip:$port/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
