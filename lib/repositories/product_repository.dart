@@ -50,11 +50,13 @@ class ProductRepository extends ChangeNotifier {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         _products.clear();
+
         for (var item in json) {
+          // print(item);
           _products.add(Product(
-            id: item[0],
-            name: item[1],
-            productType: item[2],
+            // id: item[0],
+            name: item[0],
+            productType: item[1],
           ));
         }
         notifyListeners();

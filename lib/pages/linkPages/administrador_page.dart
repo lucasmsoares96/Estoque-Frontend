@@ -100,7 +100,7 @@ class AdministracaoPage extends StatelessWidget {
                                         alignment: Alignment.topLeft,
                                         padding: const EdgeInsets.all(10),
                                         child: Text(
-                                          'Nome ${usuarios.listUsers[index].name}',
+                                          ' ${usuarios.listUsers[index].name}',
                                           style: const TextStyle(
                                             decoration: TextDecoration.none,
                                             color: Colors.black,
