@@ -44,12 +44,12 @@ class ProductRepository extends ChangeNotifier {
 
   fetchProduct(String? token) async {
     if (token != null) {
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse('$ip:$port/getProducts'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token,
         },
-        body: jsonEncode(<String, dynamic>{'jwt': token}),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -59,8 +59,8 @@ class ProductRepository extends ChangeNotifier {
           // print(item);
           _products.add(Product(
             id: item[0],
-            name: item[0],
-            productType: item[1],
+            name: item[1],
+            productType: item[2],
           ));
         }
         notifyListeners();
@@ -94,7 +94,7 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  updateProduct(Product product) async {
+  updateProduct(Product product, String? token) async {
     print("product map:");
     print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
@@ -104,6 +104,7 @@ class ProductRepository extends ChangeNotifier {
       Uri.parse('$ip:$port/updateProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token!,
       },
       body: jsonEncode(json),
     );
@@ -125,12 +126,12 @@ class ProductRepository extends ChangeNotifier {
     print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
       "product": product.toMap(),
-      "jwt": token
     };
     final response = await http.delete(
       Uri.parse('$ip:$port/deleteProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
       },
       body: jsonEncode(json),
     );
