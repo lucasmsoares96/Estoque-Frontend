@@ -100,12 +100,12 @@ class AuthService extends ChangeNotifier {
     print(user.toMap());
     Map<String, dynamic> json = <String, dynamic>{
       "user": user.toMap(),
-      "jwt": this.user!.token,
     };
     final response = await http.post(
       Uri.parse('$ip:$port/registerUser'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': this.user!.token!,
       },
       body: jsonEncode(json),
     );

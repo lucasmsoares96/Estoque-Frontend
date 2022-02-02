@@ -12,14 +12,15 @@ final String ip = dotenv.env['ip']!;
 class UserRepository extends ChangeNotifier {
   final List<User> _usuarios = [];
   UserRepository();
-  fetchUser(String? token) async {
+
+  getUser(String? token) async {
     if (token != null) {
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse('$ip:$port/getUsers'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token,
         },
-        body: jsonEncode(<String, dynamic>{'jwt': token}),
       );
       if (response.statusCode == 200) {
         if (response.body == "This user is not Admin") {
@@ -28,11 +29,14 @@ class UserRepository extends ChangeNotifier {
         final json = jsonDecode(response.body);
         _usuarios.clear();
         for (var item in json) {
-          _usuarios.add(User(
+          _usuarios.add(
+            User(
               name: item[0],
               userType: item[2],
               email: item[3],
-              isAdmin: (item[4] == 1 ? true : false)));
+              isAdmin: (item[4] == 1 ? true : false),
+            ),
+          );
         }
         notifyListeners();
       } else {

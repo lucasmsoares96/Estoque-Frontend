@@ -77,23 +77,24 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          context.read<AuthService>().user!.isAdmin!  ? 
-          Row(
-            children: [
-              Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
-              TextButton(
-                onPressed: () {
-                  _selectedPage(2);
-                },
-                child: const Text(
-                  "Administração",
-                  style: TextStyle(color: Colors.white),
-                  ),
-                ),
-            ],
-          )
-          : const SizedBox(),
-          
+          context.read<AuthService>().user!.isAdmin!
+              ? Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: _space),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _selectedPage(2);
+                      },
+                      child: const Text(
+                        "Administração",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
           Padding(padding: EdgeInsets.symmetric(horizontal: _space)),
           TextButton(
             onPressed: () {

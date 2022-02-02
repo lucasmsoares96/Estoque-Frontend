@@ -1,12 +1,9 @@
-import 'dart:js';
-
 import 'package:estoque_frontend/models/user_model.dart';
 import 'package:estoque_frontend/pages/linkPages/adduser_page.dart';
 import 'package:estoque_frontend/repositories/user_repository.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/src/provider.dart';
 import 'adduser_page.dart';
 
 class AdministracaoPage extends StatelessWidget {
@@ -41,86 +38,89 @@ class AdministracaoPage extends StatelessWidget {
             children: [
               Expanded(
                 flex: 6,
-                child: Column(children: <Widget>[
-                  //TODO: Criar uma row com barra de pesquisa e o icon button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.add),
-                        color: Colors.black,
-                        onPressed: () => showDialog<void>(
-                          context: context,
-                          barrierDismissible: false, // user must tap button!
-                          builder: (BuildContext context) {
-                            return const AddUser();
-                          },
-                        ),
-                      ),
-                      IconButton(
-                          icon: const Icon(Icons.refresh_outlined),
+                child: Column(
+                  children: <Widget>[
+                    //TODO: Criar uma row com barra de pesquisa e o icon button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.add),
                           color: Colors.black,
-                          onPressed: () async {
-                            await context
-                                .read<UserRepository>()
-                                .fetchUser(context.read<AuthService>().token);
-                            print(listUsers);
-                          }),
-                    ],
-                  ),
+                          onPressed: () => showDialog<void>(
+                            context: context,
+                            barrierDismissible: false, // user must tap button!
+                            builder: (BuildContext context) {
+                              return const AddUser();
+                            },
+                          ),
+                        ),
+                        IconButton(
+                            icon: const Icon(Icons.refresh_outlined),
+                            color: Colors.black,
+                            onPressed: () async {
+                              await context
+                                  .read<UserRepository>()
+                                  .getUser(context.read<AuthService>().token);
+                              print(listUsers);
+                            }),
+                      ],
+                    ),
 
-                  SizedBox(
-                    height: 300.0,
-                    child: Consumer<UserRepository>(
-                      builder: (context, usuarios, child) {
-                        return usuarios.listUsers.isEmpty
-                            ? Container()
-                            : ListView.separated(
-                                padding: const EdgeInsets.all(8),
-                                itemCount: usuarios.listUsers.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Row(
-                                    children: <Widget>[
-                                      Center(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          width: 50,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: NetworkImage(
-                                                  "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg"),
+                    SizedBox(
+                      height: 300.0,
+                      child: Consumer<UserRepository>(
+                        builder: (context, usuarios, child) {
+                          return usuarios.listUsers.isEmpty
+                              ? Container()
+                              : ListView.separated(
+                                  padding: const EdgeInsets.all(8),
+                                  itemCount: usuarios.listUsers.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Row(
+                                      children: <Widget>[
+                                        Center(
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: 50,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                fit: BoxFit.fill,
+                                                image: NetworkImage(
+                                                    "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg"),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.topLeft,
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          ' ${usuarios.listUsers[index].name}',
-                                          style: const TextStyle(
-                                            decoration: TextDecoration.none,
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.normal,
-                                            fontFamily: 'Oswald',
+                                        Container(
+                                          alignment: Alignment.topLeft,
+                                          padding: const EdgeInsets.all(10),
+                                          child: Text(
+                                            ' ${usuarios.listUsers[index].name}',
+                                            style: const TextStyle(
+                                              decoration: TextDecoration.none,
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.normal,
+                                              fontFamily: 'Oswald',
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) =>
-                                        const Divider(),
-                              );
-                      },
+                                      ],
+                                    );
+                                  },
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                          const Divider(),
+                                );
+                        },
+                      ),
                     ),
-                  ),
-                ]),
+                  ],
+                ),
               ),
               Expanded(
                 flex: 4,
