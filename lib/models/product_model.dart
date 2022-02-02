@@ -3,7 +3,7 @@ class Product {
   late String name;
   late String productType;
   Product({
-    id,
+    this.id,
     required String this.name,
     required String this.productType,
   });
