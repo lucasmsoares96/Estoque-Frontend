@@ -5,7 +5,6 @@ import 'package:estoque_frontend/models/stock_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 
 final String port = dotenv.env['port']!;
@@ -15,23 +14,25 @@ class ProductRepository extends ChangeNotifier {
   final List<Product> _products = [];
   final List<Stock> _stocks = [];
   ProductRepository();
-  fetchStock(String? token) async {
+  getStock(String? token) async {
     if (token != null) {
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse('$ip:$port/getStock'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token,
         },
-        body: jsonEncode(<String, dynamic>{'jwt': token}),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         _stocks.clear();
         for (var item in json) {
-          _stocks.add(Stock(
-            id: item[0],
-            quantity: item[1],
-          ));
+          _stocks.add(
+            Stock(
+              id: item[0],
+              quantity: item[1],
+            ),
+          );
         }
         notifyListeners();
       } else {
@@ -42,14 +43,14 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  fetchProduct(String? token) async {
+  getProduct(String? token) async {
     if (token != null) {
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse('$ip:$port/getProducts'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token,
         },
-        body: jsonEncode(<String, dynamic>{'jwt': token}),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -57,11 +58,13 @@ class ProductRepository extends ChangeNotifier {
 
         for (var item in json) {
           // print(item);
-          _products.add(Product(
-            // id: item[0],
-            name: item[0],
-            productType: item[1],
-          ));
+          _products.add(
+            Product(
+              // id: item[0],
+              name: item[1],
+              productType: item[2],
+            ),
+          );
         }
         notifyListeners();
       } else {
@@ -72,7 +75,7 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  registerProduct(Product product) async {
+  registerProduct(Product product, String? token) async {
     print("product map:");
     print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
@@ -82,6 +85,7 @@ class ProductRepository extends ChangeNotifier {
       Uri.parse('$ip:$port/includeProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token!,
       },
       body: jsonEncode(json),
     );

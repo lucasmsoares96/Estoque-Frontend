@@ -1,10 +1,8 @@
 import 'package:estoque_frontend/pages/linkPages/gerenciador/add_product_popup.dart';
 import 'package:estoque_frontend/repositories/product_repository.dart';
-import 'package:estoque_frontend/repositories/user_repository.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/src/provider.dart';
 
 class GerenciadorPage extends StatelessWidget {
   const GerenciadorPage({Key? key}) : super(key: key);
@@ -74,12 +72,14 @@ class GerenciadorPage extends StatelessWidget {
                               onPressed: () async {
                                 await context
                                     .read<ProductRepository>()
-                                    .fetchProduct(
+                                    .getProduct(
                                         context.read<AuthService>().token);
-                                print(context
-                                    .read<ProductRepository>()
-                                    .listProducts
-                                    .toString());
+                                print(
+                                  context
+                                      .read<ProductRepository>()
+                                      .listProducts
+                                      .toString(),
+                                );
                               }),
                         ],
                       ),

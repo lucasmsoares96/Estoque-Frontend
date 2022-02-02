@@ -1,5 +1,6 @@
 import 'package:estoque_frontend/models/product_model.dart';
 import 'package:estoque_frontend/repositories/product_repository.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -66,7 +67,10 @@ class _AddProductState extends State<AddProduct> {
       setState(() {
         isLoading = true;
       });
-      if (await context.read<ProductRepository>().registerProduct(product)) {
+      if (await context.read<ProductRepository>().registerProduct(
+            product,
+            context.read<AuthService>().token,
+          )) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Produto cadastrado com sucesso"),
@@ -224,8 +228,10 @@ class _AddProductState extends State<AddProduct> {
                     child: SizedBox(
                       height: 50,
                       child: ElevatedButton(
-                        child: const Text('Cancelar',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: const Text(
+                          'Cancelar',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -245,7 +251,7 @@ class _AddProductState extends State<AddProduct> {
                         child: const Text('Adicionar produto'),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            /* TODO resgistrar produto (ainda sem funcionar) */
+                            /* TODO: resgistrar produto (ainda sem funcionar) */
                             registerProduct(Product(
                                 name: _nameProduct.text,
                                 productType: _tagProduct.text));
