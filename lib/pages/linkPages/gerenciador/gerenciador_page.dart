@@ -138,14 +138,15 @@ class GerenciadorPage extends StatelessWidget {
                                                       .user!
                                                       .token;
 
-                                                 await produtos.deleteProduct(
+                                                  await produtos.deleteProduct(
                                                       produtos
                                                           .listProducts[index],
                                                       token!);
-                                                    await context
-                                    .read<ProductRepository>()
-                                    .fetchProduct(
-                                        context.read<AuthService>().token);
+                                                  await context
+                                                      .read<ProductRepository>()
+                                                      .fetchProduct(context
+                                                          .read<AuthService>()
+                                                          .token);
                                                 } catch (erro) {}
                                               },
                                               icon: const Icon(Icons.delete))
