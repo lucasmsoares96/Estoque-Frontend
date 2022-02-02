@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
-Future genericDialog(BuildContext context, String title, String body, String buttonName) async{
+Future genericDialog(
+    BuildContext context, String title, String body, String buttonName) async {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -13,7 +13,8 @@ Future genericDialog(BuildContext context, String title, String body, String but
           // define os botões na base do dialogo
           ElevatedButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(const Color(0xFF7B2CBF)),
+              backgroundColor:
+                  MaterialStateProperty.all(const Color(0xFF7B2CBF)),
             ),
             child: Text(buttonName),
             onPressed: () {

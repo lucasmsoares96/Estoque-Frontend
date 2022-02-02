@@ -51,12 +51,20 @@ class _AddUserState extends State<AddUser> {
       });
       if (await context.read<AuthService>().register(user)) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Usuario cadastrado com sucesso")));
+          const SnackBar(
+            content: Text("Usuario cadastrado com sucesso"),
+          ),
+        );
         Navigator.of(context).pop();
       }
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+          ),
+        ),
+      );
     }
     setState(() {
       isLoading = false;
@@ -89,9 +97,11 @@ class _AddUserState extends State<AddUser> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const Text('Informações do usuário',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Informações do usuário',
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(
                       height: 10,
                     ),

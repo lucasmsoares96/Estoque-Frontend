@@ -6,10 +6,9 @@ import 'package:estoque_frontend/pages/login/components/container_login.dart';
 import 'package:estoque_frontend/pages/login/components/textfield_login.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({ Key? key }) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -20,27 +19,25 @@ class _LoginPageState extends State<LoginPage> {
   bool _visibilityPassword = false;
   bool _loading = false;
   final TextEditingController _controllerPassword = TextEditingController();
-  final TextEditingController _controllerUser     = TextEditingController();
+  final TextEditingController _controllerUser = TextEditingController();
 
-
-  void _changeVisibilityPassword() => setState(() => _visibilityPassword = !_visibilityPassword);
+  void _changeVisibilityPassword() =>
+      setState(() => _visibilityPassword = !_visibilityPassword);
   void _changeLoadingStatus() => setState(() => _loading = !_loading);
 
   Future<void> _onButtonLoginPressed(BuildContext context) async {
-    if(_formKey.currentState!.validate()){
+    if (_formKey.currentState!.validate()) {
       _changeLoadingStatus();
       try {
-      await context
-          .read<AuthService>()
-          .login(email: _controllerUser.text, senha: _controllerPassword.text);
-    } catch (e) {
-      await genericDialog(context, "Algo deu errado", "Verifique suas credenciais e tente novemente.", "Ok");
+        await context.read<AuthService>().login(
+            email: _controllerUser.text, senha: _controllerPassword.text);
+      } catch (e) {
+        await genericDialog(context, "Algo deu errado",
+            "Verifique suas credenciais e tente novemente.", "Ok");
       }
     }
     _changeLoadingStatus();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,52 +55,59 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Text("Login", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30),),
+                  const Text(
+                    "Login",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 30),
+                  ),
                   Form(
                     key: _formKey,
                     child: Column(
-                    children: [
-                      ComponentTextfieldLogin( 
-                        controller: _controllerUser,
-                        validator: (value) {
-                          if (value!.isEmpty) return "*Campo Obrigatório";
-                          else                return null;
+                      children: [
+                        ComponentTextfieldLogin(
+                          controller: _controllerUser,
+                          validator: (value) {
+                            if (value!.isEmpty)
+                              return "*Campo Obrigatório";
+                            else
+                              return null;
                           },
-                        hint: "Usuário",),
-                      
-                      ComponentTextfieldLogin( 
-                        controller: _controllerPassword,
-                        obscure: !_visibilityPassword,
-                        hint: "Senha",
-                        validator: (value) {
-                          if (value!.isEmpty) return "*Campo Obrigatório";
-                          else                return null;
-                          },
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _visibilityPassword 
-                            ? Icons.visibility
-                            : Icons.visibility_off, 
-                            size: 20,),
-                          onPressed: () => _changeVisibilityPassword(),
+                          hint: "Usuário",
                         ),
-                       )
-
-
-                    ],
-                  )),
+                        ComponentTextfieldLogin(
+                          controller: _controllerPassword,
+                          obscure: !_visibilityPassword,
+                          hint: "Senha",
+                          validator: (value) {
+                            if (value!.isEmpty)
+                              return "*Campo Obrigatório";
+                            else
+                              return null;
+                          },
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _visibilityPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              size: 20,
+                            ),
+                            onPressed: () => _changeVisibilityPassword(),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   ComponentButtonLogin(
                     loading: _loading,
                     onPressed: () async => await _onButtonLoginPressed(context),
-                    width: _width *0.18, 
-                    text: "Entrar",),
-
+                    width: _width * 0.18,
+                    text: "Entrar",
+                  ),
                 ],
               ),
-            )
+            ),
           )
         ],
-      )
+      ),
     );
   }
 }
