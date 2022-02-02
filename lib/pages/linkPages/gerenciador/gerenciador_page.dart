@@ -126,6 +126,29 @@ class GerenciadorPage extends StatelessWidget {
                                               ),
                                             ),
                                           ),
+                                          const Expanded(
+                                            child: SizedBox(),
+                                          ),
+                                          IconButton(
+                                              onPressed: () async {
+                                                String? token;
+                                                try {
+                                                  token = context
+                                                      .read<AuthService>()
+                                                      .user!
+                                                      .token;
+
+                                                 await produtos.deleteProduct(
+                                                      produtos
+                                                          .listProducts[index],
+                                                      token!);
+                                                    await context
+                                    .read<ProductRepository>()
+                                    .fetchProduct(
+                                        context.read<AuthService>().token);
+                                                } catch (erro) {}
+                                              },
+                                              icon: const Icon(Icons.delete))
                                         ],
                                       );
                                     },

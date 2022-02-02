@@ -91,6 +91,26 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
+  deleteProduct(Product product, String token) async {
+    print("product map:");
+    print(product.toMap());
+    Map<String, dynamic> json = <String, dynamic>{
+      "product": product.toMap(),
+      "jwt": token
+    };
+    final response = await http.delete(
+      Uri.parse('$ip:$port/deleteProduct'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(json),
+    );
+
+    if (response.statusCode != 200) {
+      throw "Erro ao deletar produto";
+    }
+  }
+
   UnmodifiableListView<Product> get listProducts =>
       UnmodifiableListView(_products);
 }
