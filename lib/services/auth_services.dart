@@ -61,7 +61,7 @@ class AuthService extends ChangeNotifier {
   }) async {
     Map<String, String> credentials = {"email": email, "password": senha};
     final response = await http.post(
-      Uri.parse('$ip:$port/login'),
+      Uri.parse('http://$ip:$port/login'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -72,9 +72,7 @@ class AuthService extends ChangeNotifier {
         throw "No response from server";
       }
       try {
-        // Verify a token
         final jwt = JWT.verify(response.body, SecretKey(dotenv.env['secret']!));
-        print('Payload: ${jwt.payload}');
         User u = User(
           name: jwt.payload["name"],
           email: jwt.payload["email"],
@@ -92,28 +90,6 @@ class AuthService extends ChangeNotifier {
       notifyListeners();
     } else {
       throw "Error in connection";
-    }
-  }
-
-  Future<bool> register(User user) async {
-    print("user map:");
-    print(user.toMap());
-    Map<String, dynamic> json = <String, dynamic>{
-      "user": user.toMap(),
-    };
-    final response = await http.post(
-      Uri.parse('$ip:$port/registerUser'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': this.user!.token!,
-      },
-      body: jsonEncode(json),
-    );
-
-    if (response.statusCode != 200) {
-      throw "Erro ao cadastrar usuario";
-    } else {
-      return true;
     }
   }
 

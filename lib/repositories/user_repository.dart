@@ -13,10 +13,30 @@ class UserRepository extends ChangeNotifier {
   final List<User> _usuarios = [];
   UserRepository();
 
+  Future<bool> register(User user, String token) async {
+    Map<String, dynamic> json = <String, dynamic>{
+      "user": user.toMap(),
+    };
+    final response = await http.post(
+      Uri.parse('http://$ip:$port/users'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
+      },
+      body: jsonEncode(json),
+    );
+
+    if (response.statusCode != 200) {
+      throw "Erro ao cadastrar usuario";
+    } else {
+      return true;
+    }
+  }
+
   getUser(String? token) async {
     if (token != null) {
       final response = await http.get(
-        Uri.parse('$ip:$port/getUsers'),
+        Uri.parse('http://$ip:$port/users'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': token,
@@ -47,6 +67,5 @@ class UserRepository extends ChangeNotifier {
     }
   }
 
-  // get listUsers => _usuarios;
   UnmodifiableListView<User> get listUsers => UnmodifiableListView(_usuarios);
 }

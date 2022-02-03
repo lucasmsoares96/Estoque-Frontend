@@ -14,10 +14,11 @@ class ProductRepository extends ChangeNotifier {
   final List<Product> _products = [];
   final List<Stock> _stocks = [];
   ProductRepository();
+
   getStock(String? token) async {
     if (token != null) {
       final response = await http.get(
-        Uri.parse('$ip:$port/getStock'),
+        Uri.parse('http://$ip:$port/getStock'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': token,
@@ -46,7 +47,7 @@ class ProductRepository extends ChangeNotifier {
   Future<void> searchProducts(String? token, String name) async {
     if (token != null) {
       final response = await http.get(
-        Uri.parse('$ip:$port/getProduct/$name'),
+        Uri.parse('http://$ip:$port/products/$name'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': token,
@@ -59,7 +60,7 @@ class ProductRepository extends ChangeNotifier {
           _products.add(Product(
             name: item[0],
             productType:
-                "buscar", //TODO retornar tipo de produto do banco de dados
+                "buscar", //TODO: retornar tipo de produto do banco de dados
           ));
         }
         notifyListeners();
@@ -74,7 +75,7 @@ class ProductRepository extends ChangeNotifier {
   getProduct(String? token) async {
     if (token != null) {
       final response = await http.get(
-        Uri.parse('$ip:$port/getProducts'),
+        Uri.parse('http://$ip:$port/products'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': token,
@@ -83,9 +84,7 @@ class ProductRepository extends ChangeNotifier {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         _products.clear();
-
         for (var item in json) {
-          // print(item);
           _products.add(Product(
             id: item[0],
             name: item[1],
@@ -101,17 +100,14 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  //TODO: Passar o token pelo header
   //TODO: Fazer com que assim que for criado, o produto entre na lista dentro do repositorio
   //  Para isso fazer uma pesquisa para que retorne o id
   Future<bool> registerProduct(Product product, String token) async {
-    print("product map:");
-    print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
       "product": product.toMap(),
     };
     final response = await http.post(
-      Uri.parse('$ip:$port/includeProduct'),
+      Uri.parse('http://$ip:$port/products'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': token,
@@ -127,13 +123,11 @@ class ProductRepository extends ChangeNotifier {
   }
 
   Future<bool> updateProduct(Product product, String? token) async {
-    print("product map:");
-    print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
       "product": product.toMap(),
     };
     final response = await http.put(
-      Uri.parse('$ip:$port/updateProduct'),
+      Uri.parse('http://$ip:$port/products'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': token!,
@@ -155,13 +149,11 @@ class ProductRepository extends ChangeNotifier {
   }
 
   deleteProduct(Product product, String token) async {
-    print("product map:");
-    print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
       "product": product.toMap(),
     };
     final response = await http.delete(
-      Uri.parse('$ip:$port/deleteProduct'),
+      Uri.parse('http://$ip:$port/products'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': token,
