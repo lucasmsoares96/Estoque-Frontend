@@ -62,7 +62,9 @@ class GerenciadorPage extends StatelessWidget {
                                     barrierDismissible:
                                         false, // user must tap button!
                                     builder: (BuildContext context) {
-                                      return const AddProduct();
+                                      return const AddProduct(
+                                        product: null,
+                                      );
                                     },
                                   ),
                               icon: const Icon(Icons.add)),
@@ -126,6 +128,46 @@ class GerenciadorPage extends StatelessWidget {
                                               ),
                                             ),
                                           ),
+                                          const Expanded(
+                                            child: SizedBox(),
+                                          ),
+                                          IconButton(
+                                            onPressed: () => showDialog(
+                                              context: context,
+                                              barrierDismissible:
+                                                  false, // user must tap button!
+                                              builder: (BuildContext context) {
+                                                return AddProduct(
+                                                  product: produtos
+                                                      .listProducts[index],
+                                                );
+                                              },
+                                            ),
+                                            icon: const Icon(
+                                              Icons.edit_outlined,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () async {
+                                              String? token;
+                                              try {
+                                                token = context
+                                                    .read<AuthService>()
+                                                    .user!
+                                                    .token;
+                                                await produtos.deleteProduct(
+                                                    produtos
+                                                        .listProducts[index],
+                                                    token!);
+                                                await context
+                                                    .read<ProductRepository>()
+                                                    .fetchProduct(context
+                                                        .read<AuthService>()
+                                                        .token);
+                                              } catch (erro) {}
+                                            },
+                                            icon: const Icon(Icons.delete),
+                                          )
                                         ],
                                       );
                                     },

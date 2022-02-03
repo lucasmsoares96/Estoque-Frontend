@@ -58,13 +58,11 @@ class ProductRepository extends ChangeNotifier {
 
         for (var item in json) {
           // print(item);
-          _products.add(
-            Product(
-              // id: item[0],
-              name: item[1],
-              productType: item[2],
-            ),
-          );
+          _products.add(Product(
+            id: item[0],
+            name: item[1],
+            productType: item[2],
+          ));
         }
         notifyListeners();
       } else {
@@ -75,7 +73,10 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  registerProduct(Product product, String? token) async {
+  //TODO: Passar o token pelo header
+  //TODO: Fazer com que assim que for criado, o produto entre na lista dentro do repositorio
+  //  Para isso fazer uma pesquisa para que retorne o id
+  Future<bool> registerProduct(Product product, String token) async {
     print("product map:");
     print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
@@ -85,13 +86,63 @@ class ProductRepository extends ChangeNotifier {
       Uri.parse('$ip:$port/includeProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': token!,
+        'Authorization': token,
       },
       body: jsonEncode(json),
     );
 
     if (response.statusCode != 200) {
       throw "Erro ao cadastrar produto";
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> updateProduct(Product product, String? token) async {
+    print("product map:");
+    print(product.toMap());
+    Map<String, dynamic> json = <String, dynamic>{
+      "product": product.toMap(),
+    };
+    final response = await http.put(
+      Uri.parse('$ip:$port/updateProduct'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token!,
+      },
+      body: jsonEncode(json),
+    );
+
+    if (response.statusCode != 200) {
+      throw "Erro ao atualizar produto";
+    } else {
+      var indexOfProduct = _products
+          .indexWhere((productinList) => productinList.id == product.id);
+      if (indexOfProduct != -1) {
+        _products.removeAt(indexOfProduct);
+        _products.add(product);
+      }
+      return true;
+    }
+  }
+
+  deleteProduct(Product product, String token) async {
+    print("product map:");
+    print(product.toMap());
+    Map<String, dynamic> json = <String, dynamic>{
+      "product": product.toMap(),
+    };
+    final response = await http.delete(
+      Uri.parse('$ip:$port/deleteProduct'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
+      },
+      body: jsonEncode(json),
+    );
+
+    if (response.statusCode != 200) {
+      throw "Erro ao deletar produto";
     }
   }
 
