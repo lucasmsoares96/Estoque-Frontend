@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddProduct extends StatefulWidget {
-  const AddProduct({Key? key}) : super(key: key);
+  final Product? product;
+  const AddProduct({required this.product, Key? key}) : super(key: key);
 
   @override
   _AddProductState createState() => _AddProductState();
@@ -27,6 +28,7 @@ class _AddProductState extends State<AddProduct> {
   final TextEditingController _nameProduct = TextEditingController();
   final TextEditingController _tagProduct = TextEditingController();
   final TextEditingController _quantProduct = TextEditingController(text: "0");
+
   int _quantidade = 0;
   double _maxHeight = 375;
   final _formKey = GlobalKey<FormState>();
@@ -88,6 +90,44 @@ class _AddProductState extends State<AddProduct> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  updateProduct(Product product) async {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      if (await context
+          .read<ProductRepository>()
+          .updateProduct(product, context.read<AuthService>().token)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Produto atualizado com sucesso"),
+          ),
+        );
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+          ),
+        ),
+      );
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    _nameProduct.text = widget.product == null ? "" : widget.product!.name;
+    _tagProduct.text =
+        widget.product == null ? "" : widget.product!.productType;
+    super.initState();
   }
 
   @override
@@ -244,13 +284,25 @@ class _AddProductState extends State<AddProduct> {
                     child: SizedBox(
                       height: 50,
                       child: ElevatedButton(
-                        child: const Text('Adicionar produto'),
+                        child: widget.product == null
+                            ? const Text('Adicionar produto')
+                            : const Text('Atualizar produto'),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            /* TODO resgistrar produto (ainda sem funcionar) */
-                            registerProduct(Product(
-                                name: _nameProduct.text,
-                                productType: _tagProduct.text));
+                            if (widget.product == null) {
+                              registerProduct(
+                                Product(
+                                    name: _nameProduct.text,
+                                    productType: _tagProduct.text),
+                              );
+                            } else {
+                              updateProduct(
+                                Product(
+                                    id: widget.product!.id,
+                                    name: _nameProduct.text,
+                                    productType: _tagProduct.text),
+                              );
+                            }
                             print("Dados: \nNome: " +
                                 _nameProduct.text +
                                 "\nTag: " +

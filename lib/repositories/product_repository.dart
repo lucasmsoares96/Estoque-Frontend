@@ -97,13 +97,13 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  updateProduct(Product product, String? token) async {
+  Future<bool> updateProduct(Product product, String? token) async {
     print("product map:");
     print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
       "product": product.toMap(),
     };
-    final response = await http.post(
+    final response = await http.put(
       Uri.parse('$ip:$port/updateProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -121,6 +121,7 @@ class ProductRepository extends ChangeNotifier {
         _products.removeAt(indexOfProduct);
         _products.add(product);
       }
+      return true;
     }
   }
 
