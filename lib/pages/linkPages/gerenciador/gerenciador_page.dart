@@ -25,7 +25,54 @@ class GerenciadorPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              //TODO : barra de pesquisa
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                width: width * 0.62,
+                height: 54,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Color.fromARGB(255, 158, 44, 149)),
+                  color: Color.fromARGB(255, 253, 253, 253),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 10),
+                      blurRadius: 50,
+                      color:
+                          Color.fromARGB(255, 255, 255, 255).withOpacity(0.23),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) async {
+                          if (value != "") {
+                            String token = context.read<AuthService>().token;
+                            await context
+                                .read<ProductRepository>()
+                                .searchProducts(token, value);
+                          }
+                        },
+                        cursorColor: Colors.purple,
+                        decoration: InputDecoration(
+                          hintText: "Buscar",
+                          hintStyle: TextStyle(
+                              color: Color.fromARGB(255, 29, 8, 39)
+                                  .withOpacity(0.5)),
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 50,
+              ),
               Container(
                 alignment: Alignment.topCenter,
                 width: width * 0.7,

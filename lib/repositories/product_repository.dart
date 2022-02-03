@@ -43,6 +43,34 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
+  Future<void> searchProducts(String? token, String name) async {
+    if (token != null) {
+      final response = await http.get(
+        Uri.parse('$ip:$port/getProduct/$name'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token,
+        },
+      );
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        _products.clear();
+        for (var item in json) {
+          _products.add(Product(
+            name: item[0],
+            productType:
+                "buscar", //TODO retornar tipo de produto do banco de dados
+          ));
+        }
+        notifyListeners();
+      } else {
+        throw "erro ao contactar o servidor";
+      }
+    } else {
+      throw "erro ao buscar produtos";
+    }
+  }
+
   getProduct(String? token) async {
     if (token != null) {
       final response = await http.get(
