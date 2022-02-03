@@ -75,7 +75,7 @@ class ProductRepository extends ChangeNotifier {
   //TODO: Passar o token pelo header
   //TODO: Fazer com que assim que for criado, o produto entre na lista dentro do repositorio
   //  Para isso fazer uma pesquisa para que retorne o id
-  registerProduct(Product product) async {
+  Future<bool> registerProduct(Product product, String token) async {
     print("product map:");
     print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
@@ -85,12 +85,15 @@ class ProductRepository extends ChangeNotifier {
       Uri.parse('$ip:$port/includeProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
       },
       body: jsonEncode(json),
     );
 
     if (response.statusCode != 200) {
       throw "Erro ao cadastrar produto";
+    } else {
+      return true;
     }
   }
 

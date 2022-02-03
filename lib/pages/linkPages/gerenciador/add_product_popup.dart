@@ -1,5 +1,6 @@
 import 'package:estoque_frontend/models/product_model.dart';
 import 'package:estoque_frontend/repositories/product_repository.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -60,13 +61,14 @@ class _AddProductState extends State<AddProduct> {
   }
 
   registerProduct(Product product) async {
-    print(product.name.toString());
     ScaffoldMessenger.of(context).clearSnackBars();
     try {
       setState(() {
         isLoading = true;
       });
-      if (await context.read<ProductRepository>().registerProduct(product)) {
+      if (await context
+          .read<ProductRepository>()
+          .registerProduct(product, context.read<AuthService>().token)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Produto cadastrado com sucesso"),
@@ -255,8 +257,6 @@ class _AddProductState extends State<AddProduct> {
                                 _tagProduct.text +
                                 "\nQuantidade: " +
                                 _quantProduct.text);
-
-                            Navigator.of(context).pop();
                           } else {
                             _updateHeight();
                           }
