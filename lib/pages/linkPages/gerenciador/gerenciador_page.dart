@@ -161,7 +161,7 @@ class GerenciadorPage extends StatelessWidget {
                                                     token!);
                                                 await context
                                                     .read<ProductRepository>()
-                                                    .fetchProduct(context
+                                                    .getProduct(context
                                                         .read<AuthService>()
                                                         .token);
                                               } catch (erro) {}
