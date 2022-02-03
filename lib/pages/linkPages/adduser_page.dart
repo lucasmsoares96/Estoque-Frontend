@@ -1,13 +1,12 @@
 import 'package:estoque_frontend/models/user_model.dart';
+import 'package:estoque_frontend/repositories/user_repository.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-// ignore: unnecessary_new
-DateTime now = new DateTime.now();
-// ignore: unnecessary_new
-DateTime date = new DateTime(now.year, now.month, now.day);
+DateTime now = DateTime.now();
+DateTime date = DateTime(now.year, now.month, now.day);
 
 String _formattedDate = DateFormat('yyyy-MM-dd').format(now);
 
@@ -49,7 +48,9 @@ class _AddUserState extends State<AddUser> {
       setState(() {
         isLoading = true;
       });
-      if (await context.read<AuthService>().register(user)) {
+      if (await context
+          .read<UserRepository>()
+          .register(user, context.read<AuthService>().token)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Usuario cadastrado com sucesso"),
@@ -389,15 +390,20 @@ class _AddUserState extends State<AddUser> {
                                 )),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              registerUser(User(
-                                name: _nameController.text,
-                                email: _emailController.text,
-                                cpf: _cpfController.text,
-                                userType: _functionController.text,
-                                password: _passwordController.text,
-                                isAdmin: _isAdmin,
-                                entryDate: _formattedDate,
-                              ));
+                              registerUser(
+                                User(
+                                  name: _nameController.text,
+                                  email: _emailController.text,
+                                  cpf: _cpfController.text,
+                                  userType: _functionController.text,
+                                  password: _passwordController.text,
+                                  isAdmin: _isAdmin,
+                                  entryDate: _formattedDate,
+                                ),
+                              );
+                              context
+                                  .read<UserRepository>()
+                                  .getUser(context.read<AuthService>().token);
                             }
                           },
                           style: ElevatedButton.styleFrom(

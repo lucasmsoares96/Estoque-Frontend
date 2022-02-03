@@ -1,4 +1,3 @@
-import 'package:estoque_frontend/models/user_model.dart';
 import 'package:estoque_frontend/pages/linkPages/adduser_page.dart';
 import 'package:estoque_frontend/repositories/user_repository.dart';
 import 'package:estoque_frontend/services/auth_services.dart';
@@ -11,8 +10,6 @@ class AdministracaoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<User> listUsers = context.read<UserRepository>().listUsers;
-
     return Container(
       decoration: const BoxDecoration(
         color: Color.fromARGB(60, 248, 247, 250),
@@ -49,21 +46,21 @@ class AdministracaoPage extends StatelessWidget {
                           color: Colors.black,
                           onPressed: () => showDialog<void>(
                             context: context,
-                            barrierDismissible: false, // user must tap button!
+                            barrierDismissible: false,
                             builder: (BuildContext context) {
                               return const AddUser();
                             },
                           ),
                         ),
                         IconButton(
-                            icon: const Icon(Icons.refresh_outlined),
-                            color: Colors.black,
-                            onPressed: () async {
-                              await context
-                                  .read<UserRepository>()
-                                  .getUser(context.read<AuthService>().token);
-                              print(listUsers);
-                            }),
+                          icon: const Icon(Icons.refresh_outlined),
+                          color: Colors.black,
+                          onPressed: () async {
+                            await context
+                                .read<UserRepository>()
+                                .getUser(context.read<AuthService>().token);
+                          },
+                        ),
                       ],
                     ),
 
@@ -71,6 +68,9 @@ class AdministracaoPage extends StatelessWidget {
                       height: 300.0,
                       child: Consumer<UserRepository>(
                         builder: (context, usuarios, child) {
+                          context
+                              .read<UserRepository>()
+                              .getUser(context.read<AuthService>().token);
                           return usuarios.listUsers.isEmpty
                               ? Container()
                               : ListView.separated(

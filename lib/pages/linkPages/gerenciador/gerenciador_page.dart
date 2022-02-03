@@ -27,20 +27,21 @@ class GerenciadorPage extends StatelessWidget {
             children: [
               Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(horizontal: 20.0),
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 width: width * 0.62,
                 height: 54,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Color.fromARGB(255, 158, 44, 149)),
-                  color: Color.fromARGB(255, 253, 253, 253),
+                  border: Border.all(
+                      color: const Color.fromARGB(255, 158, 44, 149)),
+                  color: const Color.fromARGB(255, 253, 253, 253),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      offset: Offset(0, 10),
+                      offset: const Offset(0, 10),
                       blurRadius: 50,
-                      color:
-                          Color.fromARGB(255, 255, 255, 255).withOpacity(0.23),
+                      color: const Color.fromARGB(255, 255, 255, 255)
+                          .withOpacity(0.23),
                     ),
                   ],
                 ),
@@ -49,18 +50,22 @@ class GerenciadorPage extends StatelessWidget {
                     Expanded(
                       child: TextField(
                         onChanged: (value) async {
+                          String token = context.read<AuthService>().token;
                           if (value != "") {
-                            String token = context.read<AuthService>().token;
                             await context
                                 .read<ProductRepository>()
                                 .searchProducts(token, value);
+                          } else {
+                            await context
+                                .read<ProductRepository>()
+                                .getProduct(token);
                           }
                         },
                         cursorColor: Colors.purple,
                         decoration: InputDecoration(
                           hintText: "Buscar",
                           hintStyle: TextStyle(
-                              color: Color.fromARGB(255, 29, 8, 39)
+                              color: const Color.fromARGB(255, 29, 8, 39)
                                   .withOpacity(0.5)),
                           enabledBorder: InputBorder.none,
                           focusedBorder: InputBorder.none,
@@ -70,7 +75,7 @@ class GerenciadorPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               Container(
@@ -106,8 +111,7 @@ class GerenciadorPage extends StatelessWidget {
                           IconButton(
                               onPressed: () => showDialog(
                                     context: context,
-                                    barrierDismissible:
-                                        false, // user must tap button!
+                                    barrierDismissible: false,
                                     builder: (BuildContext context) {
                                       return const AddProduct(
                                         product: null,
@@ -116,20 +120,15 @@ class GerenciadorPage extends StatelessWidget {
                                   ),
                               icon: const Icon(Icons.add)),
                           IconButton(
-                              icon: const Icon(Icons.refresh_outlined),
-                              color: Colors.black,
-                              onPressed: () async {
-                                await context
-                                    .read<ProductRepository>()
-                                    .getProduct(
-                                        context.read<AuthService>().token);
-                                print(
-                                  context
-                                      .read<ProductRepository>()
-                                      .listProducts
-                                      .toString(),
-                                );
-                              }),
+                            icon: const Icon(Icons.refresh_outlined),
+                            color: Colors.black,
+                            onPressed: () async {
+                              await context
+                                  .read<ProductRepository>()
+                                  .getProduct(
+                                      context.read<AuthService>().token);
+                            },
+                          ),
                         ],
                       ),
                       const Divider(),
@@ -137,6 +136,10 @@ class GerenciadorPage extends StatelessWidget {
                         height: 300.0,
                         child: Consumer<ProductRepository>(
                           builder: (context, produtos, child) {
+                            if (produtos.listProducts.isEmpty) {
+                              context.read<ProductRepository>().getProduct(
+                                  context.read<AuthService>().token);
+                            }
                             return produtos.listProducts.isEmpty
                                 ? Container()
                                 : ListView.separated(
@@ -181,8 +184,7 @@ class GerenciadorPage extends StatelessWidget {
                                           IconButton(
                                             onPressed: () => showDialog(
                                               context: context,
-                                              barrierDismissible:
-                                                  false, // user must tap button!
+                                              barrierDismissible: false,
                                               builder: (BuildContext context) {
                                                 return AddProduct(
                                                   product: produtos
@@ -197,21 +199,18 @@ class GerenciadorPage extends StatelessWidget {
                                           IconButton(
                                             onPressed: () async {
                                               String? token;
-                                              try {
-                                                token = context
-                                                    .read<AuthService>()
-                                                    .user!
-                                                    .token;
-                                                await produtos.deleteProduct(
-                                                    produtos
-                                                        .listProducts[index],
-                                                    token!);
-                                                await context
-                                                    .read<ProductRepository>()
-                                                    .getProduct(context
-                                                        .read<AuthService>()
-                                                        .token);
-                                              } catch (erro) {}
+                                              token = context
+                                                  .read<AuthService>()
+                                                  .user!
+                                                  .token;
+                                              await produtos.deleteProduct(
+                                                  produtos.listProducts[index],
+                                                  token!);
+                                              await context
+                                                  .read<ProductRepository>()
+                                                  .getProduct(context
+                                                      .read<AuthService>()
+                                                      .token);
                                             },
                                             icon: const Icon(Icons.delete),
                                           )
