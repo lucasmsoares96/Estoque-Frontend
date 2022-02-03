@@ -66,10 +66,11 @@ class _LoginPageState extends State<LoginPage> {
                         ComponentTextfieldLogin(
                           controller: _controllerUser,
                           validator: (value) {
-                            if (value!.isEmpty)
+                            if (value!.isEmpty) {
                               return "*Campo Obrigatório";
-                            else
+                            } else {
                               return null;
+                            }
                           },
                           hint: "Usuário",
                         ),
@@ -78,10 +79,11 @@ class _LoginPageState extends State<LoginPage> {
                           obscure: !_visibilityPassword,
                           hint: "Senha",
                           validator: (value) {
-                            if (value!.isEmpty)
+                            if (value!.isEmpty) {
                               return "*Campo Obrigatório";
-                            else
+                            } else {
                               return null;
+                            }
                           },
                           suffixIcon: IconButton(
                             icon: Icon(

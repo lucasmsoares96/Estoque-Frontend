@@ -67,7 +67,7 @@ class ComponentTextfieldLogin extends StatelessWidget {
             prefixIcon: prefixIcon,
             contentPadding: maxLines == 1
                 ? EdgeInsets.only(left: leftPadding, top: 15)
-                : EdgeInsets.all(15),
+                : const EdgeInsets.all(15),
             labelText: label,
             labelStyle: textStyle,
             hintText: hint,

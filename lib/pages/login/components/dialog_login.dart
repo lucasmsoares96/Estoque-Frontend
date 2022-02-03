@@ -5,12 +5,10 @@ Future genericDialog(
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      // retorna um objeto do tipo Dialog
       return AlertDialog(
         title: Text(title),
         content: Text(body),
         actions: <Widget>[
-          // define os botões na base do dialogo
           ElevatedButton(
             style: ButtonStyle(
               backgroundColor:
