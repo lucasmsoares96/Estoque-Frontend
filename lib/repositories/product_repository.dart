@@ -44,15 +44,12 @@ class ProductRepository extends ChangeNotifier {
 
   Future<void> searchProducts(String? token, String name) async {
     if (token != null) {
-      final response = await http.post(
-        Uri.parse('$ip:$port/getProduct'),
+      final response = await http.get(
+        Uri.parse('$ip:$port/getProduct/$name'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token,
         },
-        body: jsonEncode(<String, dynamic>{
-          "product": {"name": name},
-          'jwt': token
-        }),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -60,7 +57,7 @@ class ProductRepository extends ChangeNotifier {
 
         for (var item in json) {
           _products.add(Product(
-            name: item[1],
+            name: item[0],
             productType:
                 "buscar", //TODO retornar tipo de produto do banco de dados
           ));
@@ -76,12 +73,12 @@ class ProductRepository extends ChangeNotifier {
 
   fetchProduct(String? token) async {
     if (token != null) {
-      final response = await http.post(
+      final response = await http.get(
         Uri.parse('$ip:$port/getProducts'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token,
         },
-        body: jsonEncode(<String, dynamic>{'jwt': token}),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -104,7 +101,7 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  registerProduct(Product product) async {
+  registerProduct(Product product, String token) async {
     print("product map:");
     print(product.toMap());
     Map<String, dynamic> json = <String, dynamic>{
@@ -114,6 +111,7 @@ class ProductRepository extends ChangeNotifier {
       Uri.parse('$ip:$port/includeProduct'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
       },
       body: jsonEncode(json),
     );
