@@ -28,6 +28,17 @@ class GerenciadorPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               //TODO : barra de pesquisa
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  child: TextFormField(
+                    onChanged: (value) async {
+                      String token = context.read<AuthService>().token;
+                      await context
+                          .read<ProductRepository>()
+                          .searchProducts(token, value);
+                    },
+                  )),
               Container(
                 alignment: Alignment.topCenter,
                 width: width * 0.7,
