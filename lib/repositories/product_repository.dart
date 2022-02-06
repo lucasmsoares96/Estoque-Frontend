@@ -58,9 +58,9 @@ class ProductRepository extends ChangeNotifier {
         _products.clear();
         for (var item in json) {
           _products.add(Product(
-            name: item[0],
-            productType:
-                "buscar", //TODO: retornar tipo de produto do banco de dados
+            id: item[0],
+            name: item[1],
+            productType: item[2],
           ));
         }
         notifyListeners();
@@ -100,8 +100,6 @@ class ProductRepository extends ChangeNotifier {
     }
   }
 
-  //TODO: Fazer com que assim que for criado, o produto entre na lista dentro do repositorio
-  //  Para isso fazer uma pesquisa para que retorne o id
   Future<bool> registerProduct(Product product, String token) async {
     Map<String, dynamic> json = <String, dynamic>{
       "product": product.toMap(),
@@ -114,10 +112,11 @@ class ProductRepository extends ChangeNotifier {
       },
       body: jsonEncode(json),
     );
-
     if (response.statusCode != 200) {
       throw "Erro ao cadastrar produto";
     } else {
+      _products.add(product);
+      notifyListeners();
       return true;
     }
   }
@@ -134,7 +133,6 @@ class ProductRepository extends ChangeNotifier {
       },
       body: jsonEncode(json),
     );
-
     if (response.statusCode != 200) {
       throw "Erro ao atualizar produto";
     } else {
@@ -144,6 +142,7 @@ class ProductRepository extends ChangeNotifier {
         _products.removeAt(indexOfProduct);
         _products.add(product);
       }
+      notifyListeners();
       return true;
     }
   }
@@ -160,10 +159,11 @@ class ProductRepository extends ChangeNotifier {
       },
       body: jsonEncode(json),
     );
-
     if (response.statusCode != 200) {
       throw "Erro ao deletar produto";
     }
+    _products.remove(product);
+    notifyListeners();
   }
 
   UnmodifiableListView<Product> get listProducts =>

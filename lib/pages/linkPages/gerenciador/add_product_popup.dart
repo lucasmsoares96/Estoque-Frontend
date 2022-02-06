@@ -306,9 +306,6 @@ class _AddProductState extends State<AddProduct> {
                                     productType: _tagProduct.text),
                               );
                             }
-                            await context
-                                .read<ProductRepository>()
-                                .getProduct(context.read<AuthService>().token);
                           } else {
                             _updateHeight();
                           }
