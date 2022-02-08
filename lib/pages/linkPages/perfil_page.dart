@@ -137,8 +137,7 @@ class _PerfilPageState extends State<PerfilPage> {
                               IconButton(
                                   onPressed: () => showDialog(
                                         context: context,
-                                        barrierDismissible:
-                                            false, // user must tap button!
+                                        barrierDismissible: false,
                                         builder: (BuildContext context) {
                                           return const AddProduct(
                                             product: null,
@@ -483,7 +482,9 @@ class _PerfilPageState extends State<PerfilPage> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 10, bottom: 10),
+                                      top: 10,
+                                      bottom: 10,
+                                    ),
                                     child: TextFormField(
                                       cursorColor: Colors.black,
                                       decoration: inputDecoration(""),
@@ -534,13 +535,11 @@ class _PerfilPageState extends State<PerfilPage> {
                                           _passwordController.text != '') {
                                         user.email = _emailController.text;
                                         updateUser(user);
-
                                         user.password =
                                             _newPasswordController.text;
                                         updatePassword(_passwordController.text,
                                             _newPasswordController.text);
                                       }
-
                                       if (_emailController.text != '' &&
                                           _passwordController.text == '') {
                                         user.email = _emailController.text;

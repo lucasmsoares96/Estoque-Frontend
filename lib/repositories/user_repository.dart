@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:estoque_frontend/services/auth_services.dart';
 
 final String port = dotenv.env['port']!;
 final String ip = dotenv.env['ip']!;
@@ -45,12 +44,13 @@ class UserRepository extends ChangeNotifier {
     final json = jsonDecode(response.body);
 
     User tempUser = User(
-        name: json[0][1],
-        email: user.email,
-        cpf: json[0][0],
-        userType: json[0][3],
-        isAdmin: json[0][5] == 1 ? true : false,
-        entryDate: json[0][2]);
+      cpf: json[0],
+      name: json[1],
+      entryDate: json[2],
+      userType: json[3],
+      email: user.email,
+      isAdmin: json[5] == 1 ? true : false,
+    );
 
     Map<String, dynamic> jsonUpdate = <String, dynamic>{
       "user": tempUser.toMap()
