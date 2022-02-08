@@ -1,8 +1,8 @@
 //TODO: Retirar possibilidade de null assigment
 // null assigment feito apenas para testes
 class User {
-  final String name;
-  final String email;
+  late String name;
+  late String email;
   late String? token;
   late String? cpf;
   late String? entryDate;
