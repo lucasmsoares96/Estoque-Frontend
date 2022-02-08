@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
       case 0:
         return const GerenciadorPage();
       case 1:
-        return const PerfilPage();
+        return PerfilPage();
       case 2:
         return const AdministracaoPage();
       case 3:

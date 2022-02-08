@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:estoque_frontend/services/auth_services.dart';
 
 final String port = dotenv.env['port']!;
 final String ip = dotenv.env['ip']!;
@@ -28,6 +29,68 @@ class UserRepository extends ChangeNotifier {
 
     if (response.statusCode != 200) {
       throw "Erro ao cadastrar usuario";
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> updateUser(User user, String token) async {
+    final response = await http.get(
+      Uri.parse('http://$ip:$port/getUser'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
+      },
+    );
+    final json = jsonDecode(response.body);
+
+    User tempUser = User(
+        name: json[0][1],
+        email: user.email,
+        cpf: json[0][0],
+        userType: json[0][3],
+        isAdmin: json[0][5] == 1 ? true : false,
+        entryDate: json[0][2]);
+
+    Map<String, dynamic> jsonUpdate = <String, dynamic>{
+      "user": tempUser.toMap()
+    };
+    final responseUpdate = await http.put(
+      Uri.parse('http://$ip:$port/users'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
+      },
+      body: jsonEncode(jsonUpdate),
+    );
+
+    if (responseUpdate.statusCode != 200) {
+      throw "Erro ao modificar os dados";
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> updatePassword(
+      String oldPassword, String newPassword, String token) async {
+    Map<String, dynamic> json = <String, dynamic>{
+      "user": <String, dynamic>{
+        "newPassword": newPassword,
+        "oldPassword": oldPassword,
+      }
+    };
+
+    final response = await http.put(
+      Uri.parse('http://$ip:$port/updatePassword'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': token,
+      },
+      body: jsonEncode(json),
+    );
+
+    if (response.statusCode != 200) {
+      throw "Erro ao modificar os dados";
     } else {
       return true;
     }
